@@ -199,10 +199,14 @@ margin-top:8px;
 }
 
 .hero{
-text-align:center;
-padding:30px 15px;
-background:#ffffff;
+    text-align: center;
+    padding: 300px 15px;
+    background: url("plot1.jpg") center 
+center/cover no-repeat;
 }
+
+
+
 
 .hero h2{
 font-size:30px;
