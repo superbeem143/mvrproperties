@@ -360,3 +360,15 @@ text-align:center;
 }
 
 }
+.buttons{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:12px;
+}
+
+.buttons a{
+display:inline-block;
+padding:12px 20px;
+margin:5px;
+}
