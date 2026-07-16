@@ -200,6 +200,7 @@ margin-top:8px;
 
 .hero{
     text-align: center;
+    min-height: 100vh;
     padding: 300px 15px;
     background-image: url("plot1.jpg");
     background-size: cover;
