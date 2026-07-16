@@ -206,10 +206,10 @@ margin-top:8px;
     background-position: center;
     background-repeat: no-repeat;
 }
-
-
-
-
+.overlay{
+    background: rgba(0,0,0,0.45);
+    padding: 40px 20px;
+}
 
 .hero h2{
 font-size:30px;
