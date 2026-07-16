@@ -169,3 +169,194 @@ width:100%;
 border-radius:12px;
 box-shadow:0 5px 15px rgba(0,0,0,.2);
 }
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#f5f5f5;
+color:#222;
+line-height:1.6;
+}
+
+header{
+background:#0d6e3f;
+color:#fff;
+text-align:center;
+padding:20px;
+}
+
+header h1{
+font-size:34px;
+}
+
+header p{
+font-size:18px;
+margin-top:8px;
+}
+
+.hero{
+text-align:center;
+padding:30px 15px;
+background:#ffffff;
+}
+
+.hero h2{
+font-size:30px;
+color:#0d6e3f;
+margin-bottom:10px;
+}
+
+.hero h3{
+font-size:26px;
+color:#e53935;
+margin-bottom:10px;
+}
+
+.hero p{
+font-size:18px;
+margin-bottom:20px;
+}
+
+.buttons{
+display:flex;
+justify-content:center;
+gap:15px;
+flex-wrap:wrap;
+margin-top:20px;
+}
+
+.buttons a{
+text-decoration:none;
+padding:14px 22px;
+border-radius:8px;
+font-weight:bold;
+color:#fff;
+}
+.call-btn{
+background:#1976d2;
+}
+
+.whatsapp-btn{
+background:#25D366;
+display:inline-block;
+margin-top:15px;
+}
+
+.location-btn{
+background:#ff9800;
+}
+
+.features{
+padding:40px 20px;
+background:#fff;
+text-align:center;
+}
+
+.feature-box{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+margin-top:25px;
+}
+
+.card{
+background:#f8f8f8;
+padding:20px;
+border-radius:12px;
+box-shadow:0 3px 10px rgba(0,0,0,.1);
+}
+
+.card h3{
+margin:10px 0;
+color:#0d6e3f;
+}
+
+.gallery{
+padding:40px 20px;
+text-align:center;
+}
+
+.gallery-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:15px;
+margin-top:20px;
+}
+
+.gallery-grid img,
+.layout-image{
+width:100%;
+border-radius:12px;
+box-shadow:0 3px 10px rgba(0,0,0,.15);
+}
+.contact{
+background:#ffffff;
+padding:40px 20px;
+text-align:center;
+}
+
+.contact h2{
+color:#0d6e3f;
+margin-bottom:15px;
+}
+
+.contact p{
+font-size:18px;
+margin:10px 0;
+}
+
+.floating-whatsapp{
+position:fixed;
+bottom:20px;
+right:20px;
+background:#25D366;
+color:#fff;
+width:60px;
+height:60px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:28px;
+text-decoration:none;
+box-shadow:0 4px 12px rgba(0,0,0,.3);
+z-index:999;
+}
+
+footer{
+background:#0d6e3f;
+color:#fff;
+text-align:center;
+padding:20px;
+margin-top:40px;
+}
+
+@media(max-width:768px){
+
+header h1{
+font-size:28px;
+}
+
+.hero h2{
+font-size:24px;
+}
+
+.hero h3{
+font-size:22px;
+}
+
+.buttons{
+flex-direction:column;
+align-items:center;
+}
+
+.buttons a{
+width:90%;
+text-align:center;
+}
+
+}
