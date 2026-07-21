@@ -1,128 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MVR Properties</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MVR Properties</title>
 
-<link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
 <header>
 
-<div class="logo">
-<h2>MVR Properties</h2>
-</div>
+    <div class="logo">
+        <h2>MVR Properties</h2>
+    </div>
 
-<nav>
-<a href="#">Home</a>
-<a href="#">Buy</a>
-<a href="#">Sell</a>
-<a href="#">Rent</a>
-<a href="#">Contact</a>
-</nav>
+    <nav>
+
+        <a href="#">Home</a>
+
+        <a href="#">Properties</a>
+
+        <a href="#">Layouts</a>
+
+        <a href="#">Contact</a>
+
+        <a href="admin.html" class="admin-btn">
+            Admin Login
+        </a>
+
+    </nav>
 
 </header>
 
 <section class="hero">
 
-<h1>Find Your Dream Property</h1>
+    <div class="hero-content">
 
-<p>Palakollu | Rajole | Shivakodu | Malikipuram</p>
+        <h1>Find Your Dream Property</h1>
 
-<a href="#" class="btn">View Properties</a>
+        <p>
+            Buy and Sell Open Plots, Villas,
+            Apartments and Farm Lands.
+        </p>
+
+        <a href="#properties" class="hero-btn">
+            Explore Properties
+        </a>
+
+    </div>
 
 </section>
-<section class="hero">
-...
-</section>
-
-<a class="addbtn" href="#" onclick="openPopup()">+ Add Property</a>
-
-<div id="popup" class="popup">
-  <div class="popup-content">
-
-    <span class="close" onclick="closePopup()">&times;</span>
-
-    <h2>Add Property</h2>
-
-    <input type="file" multiple>
-
-    <input type="text" placeholder="Property Title">
-
-    <input type="text" placeholder="Layout Name">
-
-    <input type="number" placeholder="Price">
-
-    <input type="text" placeholder="Location">
-
-    <button>Next</button>
-
-  </div>
-</div>
-
-
-
 <section class="search">
 
-<h2>Search Properties</h2>
+    <h2>Search Properties</h2>
 
-<input type="text" placeholder="Search by Location">
+    <div class="search-box">
 
-<select>
-<option>Property Type</option>
-<option>Open Plot</option>
-<option>House</option>
-<option>Apartment</option>
-<option>Commercial</option>
-<option>Farm Land</option>
-</select>
+        <input type="text" placeholder="Search by Location">
 
-<button>Search</button>
+        <select>
+            <option>Property Type</option>
+            <option>Open Plot</option>
+            <option>House</option>
+            <option>Apartment</option>
+            <option>Farm Land</option>
+        </select>
+
+        <button>Search</button>
+
+    </div>
 
 </section>
+
+<section id="properties" class="properties">
+
+    <h2>Featured Properties</h2>
+
+    <div class="cards">
+
+    </div>
+
+</section>
+<a href="#" class="add-property-btn">
+    + Add Property
+</a>
+
+<div class="popup" id="popup">
+
+    <div class="popup-content">
+
+        <h2>Add Property</h2>
+
+        <input type="text" placeholder="Property Title">
+
+        <input type="text" placeholder="Layout Name">
+
+        <input type="number" placeholder="Price">
+
+        <input type="number" placeholder="Price per Sq.Yard">
+
+        <input type="text" placeholder="Location">
+
+        <input type="text" placeholder="Google Maps Link">
+
+        <textarea placeholder="Property Description"></textarea>
+
+        <input type="file" multiple accept="image/*">
+
+        <button>Preview</button>
+
+        <button>Publish Property</button>
+
+    </div>
+
+</div>
+<footer>
+
+    <h3>MVR Properties</h3>
+
+    <p>
+        © 2026 MVR Properties. All Rights Reserved.
+    </p>
+
+</footer>
+
 <script src="script.js"></script>
+
 </body>
 </html>
-<section class="properties">
-
-<h2>Featured Properties</h2>
-
-<div class="cards">
-
-<div class="card">
-
-<img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800">
-
-<h3>Premium Open Plot</h3>
-
-<p>Palakollu</p>
-
-<h4>₹24,00,000</h4>
-
-<a href="#">View Details</a>
-
-</div>
-
-<div class="card">
-
-<img src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800">
-
-<h3>Luxury Villa</h3>
-
-<p>Rajole</p>
-
-<h4>₹95,00,000</h4>
-
-<a href="#">View Details</a>
-
-</div>
-
-</div>
-
-</section>
-
-<a class="addbtn" href="#">+ Add Property</a>
-
