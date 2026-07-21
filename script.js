@@ -49,3 +49,29 @@ if (publishBtn) {
     }
   });
 }
+import {
+  collection,
+  addDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const publishBtn = document.getElementById("publishBtn");
+
+if (publishBtn) {
+  publishBtn.addEventListener("click", async () => {
+
+    const title = document.querySelector('input[placeholder="Property Title"]').value;
+    const layout = document.querySelector('input[placeholder="Layout Name"]').value;
+    const price = document.querySelector('input[placeholder="Price"]').value;
+    const location = document.querySelector('input[placeholder="Location"]').value;
+
+    await addDoc(collection(window.db, "properties"), {
+      title,
+      layout,
+      price,
+      location,
+      createdAt: new Date()
+    });
+
+    alert("Property Published Successfully!");
+  });
+}
