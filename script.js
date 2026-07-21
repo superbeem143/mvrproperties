@@ -27,3 +27,25 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 });
+import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+const publishBtn = document.getElementById("publishBtn");
+
+if (publishBtn) {
+  publishBtn.addEventListener("click", async () => {
+    try {
+      await addDoc(collection(window.db, "properties"), {
+        title: document.querySelector('input[placeholder="Property Title"]').value,
+        layout: document.querySelector('input[placeholder="Layout Name"]').value,
+        price: document.querySelector('input[placeholder="Price"]').value,
+        createdAt: new Date()
+      });
+
+      alert("Property Published Successfully!");
+      closePopup();
+    } catch (err) {
+      console.error(err);
+      alert("Error publishing property.");
+    }
+  });
+}
