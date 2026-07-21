@@ -194,6 +194,49 @@ font-size:30px;
 color:white;
 cursor:pointer;
 }
+.addbtn{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#FFD700;
+  color:#000;
+  padding:12px 20px;
+  border-radius:30px;
+  text-decoration:none;
+  font-weight:bold;
+}
 
+.popup{
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,.7);
+  justify-content:center;
+  align-items:center;
+}
+
+.popup-content{
+  background:#fff;
+  padding:20px;
+  width:90%;
+  max-width:400px;
+  border-radius:10px;
+}
+
+.popup-content input,
+.popup-content button{
+  width:100%;
+  margin:8px 0;
+  padding:10px;
+}
+
+.close{
+  float:right;
+  font-size:28px;
+  cursor:pointer;
+}
     
 
