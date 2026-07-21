@@ -143,7 +143,57 @@ text-decoration:none;
 font-weight:bold;
 box-shadow:0 0 15px gold;
 }
+.popup{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.8);
+justify-content:center;
+align-items:center;
+z-index:999;
+}
 
+.popup-content{
+background:#111;
+padding:25px;
+width:90%;
+max-width:450px;
+border-radius:15px;
+}
+
+.popup-content h2{
+color:gold;
+margin-bottom:20px;
+text-align:center;
+}
+
+.popup-content input{
+width:100%;
+padding:12px;
+margin:10px 0;
+border:none;
+border-radius:8px;
+}
+
+.popup-content button{
+width:100%;
+padding:14px;
+background:gold;
+border:none;
+font-weight:bold;
+border-radius:30px;
+cursor:pointer;
+}
+
+.close{
+float:right;
+font-size:30px;
+color:white;
+cursor:pointer;
+}
 
     
 
