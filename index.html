@@ -1,243 +1,390 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MVR Properties</title>
 
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>MVR Properties</title>
+
+<link rel="stylesheet" href="style.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 </head>
 
-
-    <div class="beem-header">
-        <h2>🤖 BEEM Developer</h2>
-        <button id="closeBeem">✖</button>
-    </div>
-
-    <div class="beem-body">
-
-        <input
-        type="text"
-        id="beemPrompt"
-        placeholder="Describe what you want to change...">
-
-        <button id="analyzeProject">
-            Analyze Project
-        </button>
-
-        <div id="beemResult">
-
-            Ready to help with MVR Properties.
-
-        </div>
-
-    </div>
-
-</div>
 <body>
 
 <header>
 
-    <div class="logo">
-        <h2>MVR Properties</h2>
-    </div>
+<div class="container">
 
-    <nav>
+<div class="logo">
+<h2>MVR Properties</h2>
+</div>
 
-        <a href="#">Home</a>
+<nav>
 
-        <a href="#">Properties</a>
+<a href="#">Home</a>
 
-        <a href="#">Layouts</a>
+<a href="#properties">Properties</a>
 
-        <a href="#">Contact</a>
+<a href="#">Layouts</a>
 
-        <a href="admin.html" class="admin-btn">
-            Admin Login
-        </a>
-<a href="#" id="beemAgentBtn" class="beem-btn">
-    🤖 BEEM Agent
+<a href="#">About</a>
+
+<a href="#">Contact</a>
+
+<a href="admin.html" class="admin-btn">
+Admin Login
 </a>
-    </nav>
+
+</nav>
+
+</div>
 
 </header>
 
 <section class="hero">
 
-    <div class="hero-content">
+<div class="overlay"></div>
 
-        <h1>Find Your Dream Property</h1>
+<div class="hero-content">
 
-        <p>
-            Buy and Sell Open Plots, Villas,
-            Apartments and Farm Lands.
-        </p>
+<h1>Find Your Dream Property</h1>
 
-        <a href="#properties" class="hero-btn">
-            Explore Properties
-        </a>
+<p>
 
-    </div>
+Buy • Sell • Rent
 
-</section>
-<section class="search">
+Open Plots • Villas • Apartments • Farm Lands
 
-    <h2>Search Properties</h2>
+</p>
 
-    <div class="search-box">
+<div class="hero-buttons">
 
-        <input type="text" placeholder="Search by Location">
+<a href="#properties" class="primary-btn">
 
-        <select>
-            <option>Property Type</option>
-            <option>Open Plot</option>
-            <option>House</option>
-            <option>Apartment</option>
-            <option>Farm Land</option>
-        </select>
+Explore Properties
 
-        <button>Search</button>
-
-    </div>
-
-</section>
-
-<section id="properties" class="properties">
-
-    <h2>Featured Properties</h2>
-
-    <div class="cards">
-
-    </div>
-
-</section>
-<a href="#" class="add-property-btn" onclick="openPopup(); return false;">
-    + Add Property
 </a>
 
+<a href="#" class="secondary-btn">
 
+Post Property
 
-<div class="popup" id="popup">
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="search-section">
+
+<h2>Search Properties</h2>
+
+<div class="search-box">
+
+<input
+type="text"
+id="searchLocation"
+placeholder="Enter Location">
+
+<select id="propertyType">
+
+<option value="">
+Property Type
+</option>
+
+<option>
+Open Plot
+</option>
+
+<option>
+House
+</option>
+
+<option>
+Apartment
+</option>
+
+<option>
+Villa
+</option>
+
+<option>
+Commercial
+</option>
+
+<option>
+Farm Land
+</option>
+
+</select>
+
+<input
+type="number"
+id="budget"
+placeholder="Maximum Budget">
+
+<button id="searchBtn">
+
+Search
+
+</button>
+
+</div>
+
+</section>
+<section id="properties" class="properties">
+
+    <div class="container">
+
+        <h2>Featured Properties</h2>
+
+        <p class="section-text">
+            Browse the latest properties available for sale and rent.
+        </p>
+
+        <div id="propertyContainer" class="property-grid">
+
+            <!-- Property cards will load here -->
+
+        </div>
+
+    </div>
+
+</section>
+
+<a href="#" class="add-property-btn" onclick="openPopup(); return false;">
+
+    + Add Property
+
+</a>
+
+<div id="popup" class="popup">
 
     <div class="popup-content">
 
-        <h2>Add Property</h2>
+        <span class="close-btn" onclick="closePopup()">&times;</span>
 
-        <input type="text" placeholder="Property Title">
+        <h2>Add New Property</h2>
 
-        <input type="text" placeholder="Layout Name">
+        <input
+        type="text"
+        id="title"
+        placeholder="Property Title">
 
-        <input type="number" placeholder="Price">
+        <input
+        type="text"
+        id="layout"
+        placeholder="Layout Name">
 
-        <input type="number" placeholder="Price per Sq.Yard">
+        <select id="type">
 
-        <input type="text" placeholder="Location">
+            <option value="">Property Type</option>
 
-        <input type="text" placeholder="Google Maps Link">
+            <option>Open Plot</option>
 
-        <textarea placeholder="Property Description"></textarea>
+            <option>House</option>
 
-        <input type="file" multiple accept="image/*">
+            <option>Apartment</option>
 
-        <button>Preview</button>
+            <option>Villa</option>
 
-        <button id="publishBtn">Publish Property</button>
+            <option>Commercial</option>
+
+            <option>Farm Land</option>
+
+        </select>
+
+        <input
+        type="number"
+        id="price"
+        placeholder="Price">
+
+        <input
+        type="number"
+        id="sqyard"
+        placeholder="Price Per Sq.Yard">
+
+        <input
+        type="text"
+        id="location"
+        placeholder="Location">
+
+        <input
+        type="text"
+        id="maps"
+        placeholder="Google Maps Link">
+
+        <textarea
+        id="description"
+        placeholder="Property Description"></textarea>
+
+        <input
+        type="file"
+        id="images"
+        multiple
+        accept="image/*">
+
+        <button id="previewBtn">
+
+            Preview
+
+        </button>
+
+        <button id="publishBtn">
+
+            Publish Property
+
+        </button>
 
     </div>
 
 </div>
-<div id="properties-list"></div>    
+
 <footer>
 
     <h3>MVR Properties</h3>
 
     <p>
+
         © 2026 MVR Properties. All Rights Reserved.
+
     </p>
 
 </footer>
 <script type="module">
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
 import {
-  getFirestore,
-  collection,
-  addDoc,
-  getDocs
+getFirestore,
+collection,
+addDoc,
+getDocs
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
 const firebaseConfig = {
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optionalb
-  apiKey: "AIzaSyBIZu72FH8V95Fz-irq5g5gIdqNNxHsuMA",
-  authDomain: "mvr-properties.firebaseapp.com",
-  projectId: "mvr-properties",
-  storageBucket: "mvr-properties.firebasestorage.app",
-  messagingSenderId: "690024128026",
-  appId: "1:690024128026:web:bcdf9244462c7d4bfafba3",
-  measurementId: "G-RKQS005PHT"
+
+apiKey: "YOUR_API_KEY",
+
+authDomain: "YOUR_PROJECT.firebaseapp.com",
+
+projectId: "YOUR_PROJECT_ID",
+
+storageBucket: "YOUR_PROJECT.appspot.com",
+
+messagingSenderId: "YOUR_SENDER_ID",
+
+appId: "YOUR_APP_ID"
+
 };
-  
 
 const app = initializeApp(firebaseConfig);
+
 const db = getFirestore(app);
 
 window.db = db;
+
 const publishBtn = document.getElementById("publishBtn");
 
 publishBtn.addEventListener("click", async () => {
-  try {
 
-    await addDoc(collection(db, "properties"), {
-      title: document.querySelector('input[placeholder="Property Title"]').value,
-      layout: document.querySelector('input[placeholder="Layout Name"]').value,
-      price: document.querySelector('input[placeholder="Price"]').value,
-      location: document.querySelector('input[placeholder="Location"]').value,
-      maps: document.querySelector('input[placeholder="Google Maps Link"]').value,
-      description: document.querySelector('textarea').value,
-      createdAt: new Date()
-    });
+try {
 
-    alert("Property Published Successfully!");
+await addDoc(collection(db, "properties"), {
 
-    closePopup();
+title: document.getElementById("title").value,
 
-  } catch (error) {
-    console.error(error);
-    alert("Failed to publish property.");
-  }
-});    
+layout: document.getElementById("layout").value,
+
+type: document.getElementById("type").value,
+
+price: document.getElementById("price").value,
+
+sqyard: document.getElementById("sqyard").value,
+
+location: document.getElementById("location").value,
+
+maps: document.getElementById("maps").value,
+
+description: document.getElementById("description").value,
+
+createdAt: new Date()
+
+});
+
+alert("Property Published Successfully!");
+
+closePopup();
+
+loadProperties();
+
+}
+
+catch(error){
+
+console.log(error);
+
+alert("Publish Failed");
+
+}
+
+});
+
+async function loadProperties(){
+
+const propertyContainer=document.getElementById("propertyContainer");
+
+propertyContainer.innerHTML="";
+
+const querySnapshot=await getDocs(collection(db,"properties"));
+
+querySnapshot.forEach((doc)=>{
+
+const data=doc.data();
+
+propertyContainer.innerHTML+=`
+
+<div class="property-card">
+
+<img src="https://placehold.co/600x400?text=Property">
+
+<h3>${data.title}</h3>
+
+<p>${data.location}</p>
+
+<h2>₹ ${data.price}</h2>
+
+<a href="${data.maps}" target="_blank">
+
+View Location
+
+</a>
+
+</div>
+
+`;
+
+});
+
+}
+
+loadProperties();
+
 </script>
+
 <script src="script.js"></script>
-<!-- BEEM Floating Button -->
-
-
-<!-- BEEM Developer Panel -->
-
-
-    
-        <h2>🤖 BEEM Developer</h2>
-        <button id="closeBeem">✕</button>
-    </div>
-
-    
-
-        <textarea
-            id="beemPrompt"
-            placeholder="Describe the change you want in MVR Properties..."
-        ></textarea>
-
-        <button id="beemGenerate">
-            Generate Code
-        </button>
-
-        <div id="beemOutput">
-            Ready to help build MVR Properties.
-        </div>
-
-    
-
 
 </body>
+
 </html>
