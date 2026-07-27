@@ -210,6 +210,36 @@ publishBtn.addEventListener("click", async () => {
 });    
 </script>
 <script src="script.js"></script>
+<!-- BEEM Floating Button -->
+<button id="beemFab" class="beem-fab">
+    🤖
+</button>
 
+<!-- BEEM Developer Panel -->
+<div id="beemPanel" class="beem-panel">
+
+    <div class="beem-header">
+        <h2>🤖 BEEM Developer</h2>
+        <button id="closeBeem">✕</button>
+    </div>
+
+    <div class="beem-body">
+
+        <textarea
+            id="beemPrompt"
+            placeholder="Describe the change you want in MVR Properties..."
+        ></textarea>
+
+        <button id="beemGenerate">
+            Generate Code
+        </button>
+
+        <div id="beemOutput">
+            Ready to help build MVR Properties.
+        </div>
+
+    </div>
+
+</div>
 </body>
 </html>
