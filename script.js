@@ -1,221 +1,191 @@
-/* ===================================
-   MVR Properties V4
-   Part 1
-=================================== */
+// ==========================
+// IMPORT FIREBASE
+// ==========================
 
 import { db } from "./firebase.js";
 
 import {
-  collection,
-  addDoc,
-  getDocs,
-  query,
-  orderBy
+collection,
+addDoc,
+getDocs
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
-// ===========================
-// Mobile Menu
-// ===========================
+// ==========================
+// POPUP
+// ==========================
+
+const popup = document.getElementById("popup");
+
+window.openPopup = function () {
+    popup.style.display = "flex";
+};
+
+window.closePopup = function () {
+    popup.style.display = "none";
+};
+
+window.onclick = function (e) {
+    if (e.target === popup) {
+        closePopup();
+    }
+};
+
+// ==========================
+// MOBILE MENU
+// ==========================
 
 const menuBtn = document.getElementById("menuBtn");
 const navbar = document.getElementById("navbar");
 
-if (menuBtn && navbar) {
-  menuBtn.addEventListener("click", () => {
-    navbar.classList.toggle("active");
-  });
+if (menuBtn) {
+    menuBtn.addEventListener("click", () => {
+
+        if (navbar.style.display === "flex") {
+            navbar.style.display = "none";
+        } else {
+            navbar.style.display = "flex";
+            navbar.style.flexDirection = "column";
+        }
+
+    });
 }
 
-// ===========================
-// Popup
-// ===========================
-
-const popup = document.getElementById("popup");
-const addBtn = document.querySelector(".add-property-btn");
-
-function openPopup() {
-
-  if (!popup) return;
-
-  popup.style.display = "block";
-
-  if (addBtn) {
-    addBtn.style.display = "none";
-  }
-
-}
-
-function closePopup() {
-
-  if (!popup) return;
-
-  popup.style.display = "none";
-
-  if (addBtn) {
-    addBtn.style.display = "block";
-  }
-
-}
-
-window.openPopup = openPopup;
-window.closePopup = closePopup;
-
-window.addEventListener("click", (e)
-// ===========================
-// Load Properties
-// ===========================
+// ==========================
+// LOAD PROPERTIES
+// ==========================
 
 async function loadProperties() {
 
-  try {
+    const container = document.getElementById("propertyContainer");
 
-    properties = [];
+    if (!container) return;
 
-    const q = query(propertyRef, orderBy("title"));
+    container.innerHTML = "";
 
-    const snapshot = await getDocs(q);
+    const snapshot = await getDocs(collection(db, "properties"));
 
     snapshot.forEach((doc) => {
 
-      properties.push({
-        id: doc.id,
-        ...doc.data()
-      });
+        const p = doc.data();
 
-    });
+        container.innerHTML += `
+        <div class="property-card">
 
-    renderProperties(properties);
+            <img src="${p.image || 'https://via.placeholder.com/600x400'}">
 
-  } catch (error) {
+            <div class="property-content">
 
-    console.error("Load Error:", error);
-    alert("Unable to load properties.\n" + error.message);
+                <h3>${p.title}</h3>
 
-  }
+                <p><b>Type:</b> ${p.type}</p>
 
-}
-
-// ===========================
-// Search
-// ===========================
-
-const searchBtn = document.getElementById("searchBtn");
-
-if (searchBtn) {
-
-  searchBtn.addEventListener("click", () => {
-
-    const keyword = document
-      .getElementById("searchLocation")
-      .value
-      .trim()
-      .toLowerCase();
-
-    if (keyword === "") {
-
-      renderProperties(properties);
-      return;
-
-    }
-
-    const filtered = properties.filter((item) =>
-
-      item.location &&
-      item.location.toLowerCase().includes(keyword)
-
-    );
-
-    renderProperties(filtered);
-
-  });
-
-}
-// ===========================
-// Publish Property
-// ===========================
+                <p><b>Location:</b> ${
+       // ==========================
+// PUBLISH PROPERTY
+// ==========================
 
 const publishBtn = document.getElementById("publishBtn");
 
 if (publishBtn) {
 
-  publishBtn.addEventListener("click", async () => {
+    publishBtn.addEventListener("click", async () => {
 
-    const title = document.getElementById("title").value.trim();
-    const location = document.getElementById("location").value.trim();
-    const price = document.getElementById("price").value.trim();
+        const title = document.getElementById("title").value.trim();
+        const layout = document.getElementById("layout").value.trim();
+        const type = document.getElementById("type").value;
+        const price = document.getElementById("price").value;
+        const sqyard = document.getElementById("sqyard").value;
+        const location = document.getElementById("location").value.trim();
+        const maps = document.getElementById("maps").value.trim();
+        const description = document.getElementById("description").value.trim();
 
-    if (!title || !location || !price) {
-      alert("Please fill all required fields.");
-      return;
-    }
+        if (!title || !type || !price || !location) {
+            alert("Please fill all required fields.");
+            return;
+        }
 
-    const newProperty = {
-      title: title,
-      location: location,
-      price: "₹" + price,
-      image: "images/no-image.jpg",
-      createdAt: new Date()
-    };
+        await addDoc(collection(db, "properties"), {
+            title,
+            layout,
+            type,
+            price,
+            sqyard,
+            location,
+            maps,
+            description,
+            image: ""
+        });
 
-    try {
+        alert("Property published successfully!");
 
-      await addDoc(propertyRef, newProperty);
+        closePopup();
+        location.reload();
 
-      alert("Property Published Successfully!");
-
-      document.getElementById("title").value = "";
-      document.getElementById("layout").value = "";
-      document.getElementById("price").value = "";
-      document.getElementById("sqyard").value = "";
-      document.getElementById("location").value = "";
-      document.getElementById("maps").value = "";
-      document.getElementById("description").value = "";
-      document.getElementById("images").value = "";
-
-      closePopup();
-
-      await loadProperties();
-
-    } catch (error) {
-
-      console.error("Publish Error:", error);
-      alert("Failed to publish property.\n" + error.message);
-
-    }
-
-  });
+    });
 
 }
-// ===========================
-// Preview Button
-// ===========================
+
+// ==========================
+// SEARCH
+// ==========================
+
+const searchBtn = document.getElementById("searchBtn");
+
+if (searchBtn) {
+
+    searchBtn.addEventListener("click", () => {
+
+        const keyword = document
+            .getElementById("searchLocation")
+            .value
+            .toLowerCase();
+
+        const cards = document.querySelectorAll(".property-card");
+
+        cards.forEach(card => {
+
+            if (card.innerText.toLowerCase().includes(keyword)) {
+
+                card.style.display = "block";
+
+            } else {
+
+                card.style.display = "none";
+
+            }
+
+        });
+
+    });
+
+}
+
+// ==========================
+// PREVIEW BUTTON
+// ==========================
 
 const previewBtn = document.getElementById("previewBtn");
 
 if (previewBtn) {
 
-  previewBtn.addEventListener("click", () => {
+    previewBtn.addEventListener("click", () => {
 
-    alert("Preview feature coming soon!");
+        alert(
+`Preview
 
-  });
+Title: ${document.getElementById("title").value}
+
+Type: ${document.getElementById("type").value}
+
+Location: ${document.getElementById("location").value}
+
+Price: ₹${document.getElementById("price").value}`
+        );
+
+    });
 
 }
 
-// ===========================
-// Initial Load
-// ===========================
 
-window.addEventListener("DOMContentLoaded", async () => {
-
-  await loadProperties();
-
-});
-
-// ===========================
-// Console
-// ===========================
-
-console.log("✅ MVR Properties V4 Loaded Successfully");
-
-            
+     
+  
