@@ -1,6 +1,7 @@
-/* ==========================
-   MVR Properties - Part 1
-========================== */
+/* ===================================
+   MVR Properties V2
+   Part 1
+=================================== */
 
 *{
     margin:0;
@@ -16,9 +17,8 @@ html{
 body{
     background:#111;
     color:#fff;
+    overflow-x:hidden;
 }
-
-/* Container */
 
 .container{
     width:90%;
@@ -26,14 +26,17 @@ body{
     margin:auto;
 }
 
-/* Header */
+/* ======================
+   HEADER
+====================== */
 
 header{
+    width:100%;
+    background:#000;
     position:sticky;
     top:0;
     z-index:1000;
-    background:#000;
-    border-bottom:2px solid #ffd000;
+    border-bottom:2px solid #FFD700;
 }
 
 header .container{
@@ -44,15 +47,19 @@ header .container{
 }
 
 .logo h2{
-    color:#ffd000;
-    font-size:38px;
-    font-weight:700;
+    color:#FFD700;
+    font-size:34px;
+    font-weight:800;
+}
+
+.logo span{
+    color:#fff;
 }
 
 nav{
     display:flex;
     align-items:center;
-    gap:20px;
+    gap:25px;
 }
 
 nav a{
@@ -63,30 +70,34 @@ nav a{
 }
 
 nav a:hover{
-    color:#ffd000;
+    color:#FFD700;
 }
 
 .admin-btn{
-    background:#ffd000;
+    background:#FFD700;
     color:#000;
     padding:12px 22px;
     border-radius:10px;
     font-weight:700;
 }
 
-/* Hero */
+.menu-btn{
+    display:none;
+    color:#FFD700;
+    font-size:30px;
+    cursor:pointer;
+}
+
+/* ======================
+   HERO
+====================== */
 
 .hero{
     height:90vh;
-
-    background:
-    linear-gradient(rgba(0,0,0,.65),
-    rgba(0,0,0,.65)),
+    background:linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),
     url("images/hero.jpg");
-
     background-size:cover;
     background-position:center;
-
     display:flex;
     justify-content:center;
     align-items:center;
@@ -95,71 +106,57 @@ nav a:hover{
 }
 
 .hero-content h1{
-
-    font-size:64px;
-    color:#ffd000;
+    font-size:65px;
+    color:#FFD700;
     margin-bottom:20px;
-
 }
 
 .hero-content p{
-
     font-size:28px;
     line-height:1.8;
-
+    margin-bottom:35px;
 }
 
-.hero-buttons{
-
-    margin-top:35px;
-
+.primary-btn,
+.secondary-btn{
+    display:inline-block;
+    padding:16px 34px;
+    border-radius:12px;
+    text-decoration:none;
+    font-weight:bold;
+    margin:8px;
 }
 
 .primary-btn{
-
-    display:inline-block;
-    background:#ffd000;
+    background:#FFD700;
     color:#000;
-    text-decoration:none;
-    padding:16px 35px;
-    border-radius:12px;
-    font-size:20px;
-    font-weight:bold;
-    margin-right:15px;
-
 }
 
 .secondary-btn{
-
-    display:inline-block;
-    border:2px solid #ffd000;
-    color:#ffd000;
-    text-decoration:none;
-    padding:16px 35px;
-    border-radius:12px;
-    font-size:20px;
+    border:2px solid #FFD700;
+    color:#FFD700;
 }
 /* ==========================
-   Search Section
+   SEARCH SECTION
 ========================== */
 
 .search-section{
-    padding:70px 20px;
+    padding:80px 20px;
     background:#181818;
-    text-align:center;
 }
 
 .search-section h2{
-    color:#ffd000;
-    font-size:38px;
-    margin-bottom:30px;
+    text-align:center;
+    color:#FFD700;
+    font-size:40px;
+    margin-bottom:35px;
 }
 
 .search-box{
-    max-width:1100px;
+    max-width:1200px;
     margin:auto;
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
     gap:20px;
 }
 
@@ -173,54 +170,47 @@ nav a:hover{
 }
 
 .search-box button{
-    background:#ffd000;
+    background:#FFD700;
     color:#000;
     border:none;
     border-radius:10px;
     font-size:18px;
     font-weight:bold;
     cursor:pointer;
-    transition:.3s;
-}
-
-.search-box button:hover{
-    transform:scale(1.04);
 }
 
 /* ==========================
-   Featured Properties
+   FEATURED PROPERTIES
 ========================== */
 
 .properties{
-    padding:80px 20px;
+    padding:90px 20px;
 }
 
 .properties h2{
     text-align:center;
-    color:#ffd000;
+    color:#FFD700;
     font-size:42px;
 }
 
-.section-text{
+.section-title{
     text-align:center;
     color:#ddd;
-    margin-top:15px;
-    margin-bottom:40px;
+    margin:20px 0 45px;
     font-size:20px;
 }
 
 .property-grid{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
     gap:30px;
 }
 
 .property-card{
-    background:#1d1d1d;
+    background:#1b1b1b;
     border-radius:15px;
     overflow:hidden;
     transition:.3s;
-    box-shadow:0 5px 15px rgba(0,0,0,.35);
 }
 
 .property-card:hover{
@@ -234,59 +224,125 @@ nav a:hover{
 }
 
 .property-card h3{
+    color:#FFD700;
     padding:15px;
-    color:#ffd000;
 }
 
 .property-card p{
-    padding:0 15px;
-    color:#ddd;
+    color:#ccc;
+    padding:0 15px 15px;
 }
 
-.property-card h2{
-    padding:15px;
+.property-card .price{
     color:#00ff99;
-    font-size:28px;
-}
-
-.property-card a{
-    display:block;
-    margin:15px;
-    text-align:center;
-    background:#ffd000;
-    color:#000;
-    text-decoration:none;
-    padding:12px;
-    border-radius:8px;
+    font-size:26px;
     font-weight:bold;
+    padding:0 15px 15px;
 }
 
 /* ==========================
-   Add Property Button
+   WHY CHOOSE MVR
+========================== */
+
+.why-mvr{
+    padding:90px 20px;
+    background:#181818;
+}
+
+.why-mvr h2{
+    text-align:center;
+    color:#FFD700;
+    margin-bottom:50px;
+}
+
+.why-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:25px;
+}
+
+.why-card{
+    background:#222;
+    padding:30px;
+    border-radius:15px;
+    text-align:center;
+}
+
+.why-card h3{
+    color:#FFD700;
+    margin-bottom:15px;
+}
+
+.why-card p{
+    color:#ddd;
+}
+/* ==========================
+   CONTACT SECTION
+========================== */
+
+.contact{
+    padding:90px 20px;
+    text-align:center;
+}
+
+.contact h2{
+    color:#FFD700;
+    font-size:42px;
+    margin-bottom:15px;
+}
+
+.contact p{
+    color:#ddd;
+    margin-bottom:35px;
+    font-size:20px;
+}
+
+.contact-buttons{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.call-btn,
+.whatsapp-btn{
+    display:inline-block;
+    padding:16px 30px;
+    border-radius:12px;
+    text-decoration:none;
+    font-weight:bold;
+    color:#fff;
+}
+
+.call-btn{
+    background:#007bff;
+}
+
+.whatsapp-btn{
+    background:#25D366;
+}
+
+/* ==========================
+   ADD PROPERTY BUTTON
 ========================== */
 
 .add-property-btn{
     position:fixed;
     right:25px;
     bottom:25px;
-    background:#ffd000;
+    background:#FFD700;
     color:#000;
-    text-decoration:none;
     padding:18px 28px;
     border-radius:15px;
-    font-size:22px;
-    font-weight:bold;
-    box-shadow:0 10px 25px rgba(0,0,0,.4);
-   z-index:999;
-transition:0.3s;
-}
-
-.add-property-btn:hover{
-    transform:scale(1.08);
+    text-decoration:none;
+    font-weight:700;
+    font-size:20px;
+    z-index:999;
+    box-shadow:0 8px 20px rgba(0,0,0,.35);
 }
 
 /* ==========================
-   Popup
+   POPUP
 ========================== */
 
 .popup{
@@ -295,74 +351,65 @@ transition:0.3s;
     inset:0;
     background:rgba(0,0,0,.75);
     z-index:2000;
-    overflow:auto;
 }
 
 .popup-content{
     width:90%;
     max-width:700px;
     margin:40px auto;
-    background:#1a1a1a;
+    background:#1b1b1b;
     padding:30px;
     border-radius:15px;
 }
 
 .popup-content h2{
-    color:#ffd000;
+    color:#FFD700;
+    margin-bottom:20px;
     text-align:center;
-    margin-bottom:25px;
 }
 
 .popup-content input,
 .popup-content select,
 .popup-content textarea{
     width:100%;
-    padding:15px;
     margin-bottom:15px;
+    padding:15px;
     border:none;
     border-radius:10px;
-    font-size:16px;
-}
-
-.popup-content textarea{
-    height:140px;
-    resize:vertical;
 }
 
 .popup-content button{
     width:100%;
-    margin-top:10px;
     padding:15px;
     border:none;
     border-radius:10px;
-    background:#ffd000;
+    background:#FFD700;
     color:#000;
-    font-size:18px;
     font-weight:bold;
     cursor:pointer;
+    margin-top:10px;
 }
 
 .close-btn{
     float:right;
-    color:#fff;
     font-size:30px;
     cursor:pointer;
 }
 
 /* ==========================
-   Footer
+   FOOTER
 ========================== */
 
 footer{
     background:#000;
     text-align:center;
     padding:40px 20px;
-    margin-top:80px;
+    margin-top:70px;
 }
 
 footer h3{
-    color:#ffd000;
-    margin-bottom:15px;
+    color:#FFD700;
+    margin-bottom:10px;
 }
 
 footer p{
@@ -370,7 +417,7 @@ footer p{
 }
 
 /* ==========================
-   Mobile Responsive
+   MOBILE
 ========================== */
 
 @media(max-width:768px){
@@ -380,17 +427,13 @@ header .container{
     gap:15px;
 }
 
-.logo h2{
-    font-size:30px;
-}
-
 nav{
     flex-wrap:wrap;
     justify-content:center;
 }
 
 .hero{
-    height:75vh;
+    height:70vh;
 }
 
 .hero-content h1{
@@ -398,26 +441,29 @@ nav{
 }
 
 .hero-content p{
-    font-size:22px;
-}
-
-.primary-btn,
-.secondary-btn{
-    display:block;
-    width:100%;
-    margin:10px 0;
-}
-
-.add-property-btn{
-    right:15px;
-    left:15px;
-    bottom:20px;
-    text-align:center;
     font-size:20px;
 }
 
-.popup-content{
-    width:95%;
+.search-box{
+    grid-template-columns:1fr;
 }
 
+.property-grid{
+    grid-template-columns:1fr;
 }
+
+.contact-buttons{
+    flex-direction:column;
+}
+
+.add-property-btn{
+    left:15px;
+    right:15px;
+    text-align:center;
+}
+
+   }
+
+
+    
+
