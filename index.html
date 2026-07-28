@@ -8,59 +8,84 @@
 
 <title>MVR Properties</title>
 
+<meta name="description"
+content="Buy and Sell Open Plots, Villas, Apartments and Farm Lands">
+
 <link rel="stylesheet" href="style.css">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 </head>
 
 <body>
+
+<!-- ===========================
+HEADER
+=========================== -->
 
 <header>
 
 <div class="container">
 
 <div class="logo">
-<h2>MVR Properties</h2>
+
+<h2>MVR <span>Properties</span></h2>
+
 </div>
 
-<nav>
+<nav id="navbar">
 
 <a href="#">Home</a>
 
 <a href="#properties">Properties</a>
 
-<a href="#">Layouts</a>
+<a href="#about">About</a>
 
-<a href="#">About</a>
-
-<a href="#">Contact</a>
+<a href="#contact">Contact</a>
 
 <a href="admin.html" class="admin-btn">
+
 Admin Login
+
 </a>
 
 </nav>
+
+<div class="menu-btn" id="menuBtn">
+
+☰
+
+</div>
 
 </div>
 
 </header>
 
+<!-- ===========================
+HERO SECTION
+=========================== -->
+
 <section class="hero">
 
-<div class="overlay"></div>
+<div class="hero-overlay"></div>
 
 <div class="hero-content">
 
-<h1>Find Your Dream Property</h1>
+<h1>
+
+Find Your Dream Property
+
+</h1>
 
 <p>
 
 Buy • Sell • Rent
+
+<br>
 
 Open Plots • Villas • Apartments • Farm Lands
 
@@ -74,7 +99,7 @@ Explore Properties
 
 </a>
 
-<a href="#" class="secondary-btn">
+<a href="#popup" class="secondary-btn">
 
 Post Property
 
@@ -86,9 +111,19 @@ Post Property
 
 </section>
 
+<!-- ===========================
+SEARCH
+=========================== -->
+
 <section class="search-section">
 
-<h2>Search Properties</h2>
+<div class="container">
+
+<h2>
+
+Search Properties
+
+</h2>
 
 <div class="search-box">
 
@@ -100,39 +135,53 @@ placeholder="Enter Location">
 <select id="propertyType">
 
 <option value="">
+
 Property Type
+
 </option>
 
 <option>
+
 Open Plot
+
 </option>
 
 <option>
+
 House
+
 </option>
 
 <option>
+
 Apartment
+
 </option>
 
 <option>
+
 Villa
+
 </option>
 
 <option>
+
 Commercial
+
 </option>
 
 <option>
+
 Farm Land
+
 </option>
 
 </select>
 
 <input
 type="number"
-id="budget"
-placeholder="Maximum Budget">
+placeholder="Maximum Budget"
+id="budget">
 
 <button id="searchBtn">
 
@@ -142,249 +191,230 @@ Search
 
 </div>
 
+</div>
+
 </section>
+
+<!-- Part 2 Starts Below -->
+<!-- ===========================
+FEATURED PROPERTIES
+=========================== -->
+
 <section id="properties" class="properties">
 
-    <div class="container">
+<div class="container">
 
-        <h2>Featured Properties</h2>
+<h2>Featured Properties</h2>
 
-        <p class="section-text">
-            Browse the latest properties available for sale and rent.
-        </p>
+<p class="section-title">
+Discover premium plots, villas, apartments and farm lands.
+</p>
 
-        <div id="propertyContainer" class="property-grid">
+<div class="property-grid" id="propertyContainer">
 
-            <!-- Property cards will load here -->
+<!-- Properties will load here -->
 
-        </div>
+</div>
 
-    </div>
+</div>
 
 </section>
 
-<a href="#" class="add-property-btn" onclick="openPopup(); return false;">
+<!-- ===========================
+WHY CHOOSE MVR
+=========================== -->
 
-    + Add Property
+<section id="about" class="why-mvr">
+
+<div class="container">
+
+<h2>Why Choose MVR Properties?</h2>
+
+<div class="why-grid">
+
+<div class="why-card">
+
+<h3>🏡 Verified Properties</h3>
+
+<p>
+All properties are verified before publishing.
+</p>
+
+</div>
+
+<div class="why-card">
+
+<h3>📍 Prime Locations</h3>
+
+<p>
+Best layouts and residential areas.
+</p>
+
+</div>
+
+<div class="why-card">
+
+<h3>💰 Best Price</h3>
+
+<p>
+Affordable prices with transparent deals.
+</p>
+
+</div>
+
+<div class="why-card">
+
+<h3>🤝 Trusted Support</h3>
+
+<p>
+Our team helps you from enquiry to registration.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ===========================
+CONTACT
+=========================== -->
+
+<section id="contact" class="contact">
+
+<div class="container">
+
+<h2>Contact Us</h2>
+
+<p>
+Need help finding your dream property?
+</p>
+
+<div class="contact-buttons">
+
+<a href="tel:+919999999999" class="call-btn">
+
+📞 Call Now
 
 </a>
 
-<div id="popup" class="popup">
+<a href="https://wa.me/919999999999"
+target="_blank"
+class="whatsapp-btn">
 
-    <div class="popup-content">
+💬 WhatsApp
 
-        <span class="close-btn" onclick="closePopup()">&times;</span>
-
-        <h2>Add New Property</h2>
-
-        <input
-        type="text"
-        id="title"
-        placeholder="Property Title">
-
-        <input
-        type="text"
-        id="layout"
-        placeholder="Layout Name">
-
-        <select id="type">
-
-            <option value="">Property Type</option>
-
-            <option>Open Plot</option>
-
-            <option>House</option>
-
-            <option>Apartment</option>
-
-            <option>Villa</option>
-
-            <option>Commercial</option>
-
-            <option>Farm Land</option>
-
-        </select>
-
-        <input
-        type="number"
-        id="price"
-        placeholder="Price">
-
-        <input
-        type="number"
-        id="sqyard"
-        placeholder="Price Per Sq.Yard">
-
-        <input
-        type="text"
-        id="location"
-        placeholder="Location">
-
-        <input
-        type="text"
-        id="maps"
-        placeholder="Google Maps Link">
-
-        <textarea
-        id="description"
-        placeholder="Property Description"></textarea>
-
-        <input
-        type="file"
-        id="images"
-        multiple
-        accept="image/*">
-
-        <button id="previewBtn">
-
-            Preview
-
-        </button>
-
-        <button id="publishBtn">
-
-            Publish Property
-
-        </button>
-
-    </div>
+</a>
 
 </div>
+
+</div>
+
+</section>
+
+<!-- Part 3 Starts Below -->
+<!-- ===========================
+ADD PROPERTY BUTTON
+=========================== -->
+
+<a href="#" class="add-property-btn" onclick="openPopup();return false;">
+
++ Add Property
+
+</a>
+
+<!-- ===========================
+ADD PROPERTY POPUP
+=========================== -->
+
+<div class="popup" id="popup">
+
+<div class="popup-content">
+
+<span class="close-btn" onclick="closePopup()">&times;</span>
+
+<h2>Add New Property</h2>
+
+<input type="text" id="title" placeholder="Property Title">
+
+<input type="text" id="layout" placeholder="Layout Name">
+
+<select id="type">
+
+<option value="">Property Type</option>
+
+<option>Open Plot</option>
+
+<option>House</option>
+
+<option>Apartment</option>
+
+<option>Villa</option>
+
+<option>Commercial</option>
+
+<option>Farm Land</option>
+
+</select>
+
+<input type="number" id="price" placeholder="Price">
+
+<input type="number" id="sqyard" placeholder="Price Per Sq.Yard">
+
+<input type="text" id="location" placeholder="Location">
+
+<input type="text" id="maps" placeholder="Google Maps Link">
+
+<textarea id="description" placeholder="Property Description"></textarea>
+
+<input type="file" id="images" multiple accept="image/*">
+
+<button id="previewBtn">
+
+Preview
+
+</button>
+
+<button id="publishBtn">
+
+Publish Property
+
+</button>
+
+</div>
+
+</div>
+
+<!-- ===========================
+FOOTER
+=========================== -->
 
 <footer>
 
-    <h3>MVR Properties</h3>
+<div class="container">
 
-    <p>
+<h3>MVR Properties</h3>
 
-        © 2026 MVR Properties. All Rights Reserved.
+<p>
 
-    </p>
+© 2026 MVR Properties. All Rights Reserved.
 
-</footer>
-<script type="module">
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-
-import {
-getFirestore,
-collection,
-addDoc,
-getDocs
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
-
-const firebaseConfig = {
-
-apiKey: "YOUR_API_KEY",
-
-authDomain: "YOUR_PROJECT.firebaseapp.com",
-
-projectId: "YOUR_PROJECT_ID",
-
-storageBucket: "YOUR_PROJECT.appspot.com",
-
-messagingSenderId: "YOUR_SENDER_ID",
-
-appId: "YOUR_APP_ID"
-
-};
-
-const app = initializeApp(firebaseConfig);
-
-const db = getFirestore(app);
-
-window.db = db;
-
-const publishBtn = document.getElementById("publishBtn");
-
-publishBtn.addEventListener("click", async () => {
-
-try {
-
-await addDoc(collection(db, "properties"), {
-
-title: document.getElementById("title").value,
-
-layout: document.getElementById("layout").value,
-
-type: document.getElementById("type").value,
-
-price: document.getElementById("price").value,
-
-sqyard: document.getElementById("sqyard").value,
-
-location: document.getElementById("location").value,
-
-maps: document.getElementById("maps").value,
-
-description: document.getElementById("description").value,
-
-createdAt: new Date()
-
-});
-
-alert("Property Published Successfully!");
-
-closePopup();
-
-loadProperties();
-
-}
-
-catch(error){
-
-console.log(error);
-
-alert("Publish Failed");
-
-}
-
-});
-
-async function loadProperties(){
-
-const propertyContainer=document.getElementById("propertyContainer");
-
-propertyContainer.innerHTML="";
-
-const querySnapshot=await getDocs(collection(db,"properties"));
-
-querySnapshot.forEach((doc)=>{
-
-const data=doc.data();
-
-propertyContainer.innerHTML+=`
-
-<div class="property-card">
-
-<img src="https://placehold.co/600x400?text=Property">
-
-<h3>${data.title}</h3>
-
-<p>${data.location}</p>
-
-<h2>₹ ${data.price}</h2>
-
-<a href="${data.maps}" target="_blank">
-
-View Location
-
-</a>
+</p>
 
 </div>
 
-`;
-
-});
-
-}
-
-loadProperties();
-
-</script>
+</footer>
 
 <script src="script.js"></script>
 
 </body>
 
 </html>
+
+
+
+        
+
+
