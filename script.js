@@ -1,7 +1,17 @@
 /* ===================================
-   MVR Properties V2
-   script.js - Part 1
+   MVR Properties V3
+   Part 1
 =================================== */
+
+import { db } from "./firebase.js";
+
+import {
+addDoc,
+collection,
+getDocs,
+orderBy,
+query
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 // ===========================
 // Mobile Menu
@@ -12,11 +22,11 @@ const navbar = document.getElementById("navbar");
 
 if (menuBtn && navbar) {
 
-    menuBtn.addEventListener("click", () => {
+menuBtn.addEventListener("click", () => {
 
-        navbar.classList.toggle("active");
+navbar.classList.toggle("active");
 
-    });
+});
 
 }
 
@@ -28,197 +38,247 @@ const popup = document.getElementById("popup");
 
 function openPopup(){
 
-    if(popup){
+if(popup){
 
-        popup.style.display = "block";
+popup.style.display="block";
 
-    }
+}
 
 }
 
 function closePopup(){
 
-    if(popup){
+if(popup){
 
-        popup.style.display = "none";
-
-    }
+popup.style.display="none";
 
 }
 
-window.openPopup = openPopup;
-window.closePopup = closePopup;
+}
 
-// Close popup when clicking outside
+window.openPopup=openPopup;
+window.closePopup=closePopup;
 
 window.addEventListener("click",(e)=>{
 
-    if(e.target === popup){
+if(e.target===popup){
 
-        closePopup();
+closePopup();
 
-    }
+}
 
 });
 
 // ===========================
-// Sample Properties
+// Firestore Collection
 // ===========================
 
-const sampleProperties = [
+const propertyRef = collection(db,"properties");
 
-{
+// ===========================
+// Property List
+// ===========================
 
-title:"Premium Open Plot",
+let properties=[];
 
-location:"Hyderabad",
-
-price:"₹25,00,000",
-
-image:"images/no-image.jpg"
-
-},
-
-{
-
-title:"Luxury Villa",
-
-location:"Visakhapatnam",
-
-price:"₹85,00,000",
-
-image:"images/no-image.jpg"
-
-},
-
-{
-
-title:"Farm Land",
-
-location:"Palakollu",
-
-price:"₹15,00,000",
-
-image:"images/no-image.jpg"
-
-}
-
-];
 // ===========================
 // Render Properties
 // ===========================
 
-const propertyContainer = document.getElementById("propertyContainer");
+const propertyContainer =
+document.getElementById("propertyContainer");
 
 function renderProperties(list){
 
-    if(!propertyContainer) return;
+if(!propertyContainer) return;
 
-    propertyContainer.innerHTML = "";
+propertyContainer.innerHTML="";
 
-    list.forEach(property=>{
+if(list.length===0){
 
-        propertyContainer.innerHTML += `
+propertyContainer.innerHTML=`
 
-        <div class="property-card">
+<div class="no-property">
 
-            <img src="${property.image}" alt="${property.title}">
+<h2>No Properties Found</h2>
 
-            <h3>${property.title}</h3>
+</div>
 
-            <p>📍 ${property.location}</p>
+`;
 
-            <div class="price">${property.price}</div>
-
-            <a href="#" class="primary-btn">
-                View Details
-            </a>
-
-        </div>
-
-        `;
-
-    });
+return;
 
 }
 
-// Load sample properties
+list.forEach(property=>{
 
-renderProperties(sampleProperties);
+propertyContainer.innerHTML+=`
 
-// ===========================
-// Search
-// ===========================
+<div class="property-card">
 
-const searchBtn = document.getElementById("searchBtn");
+<img src="${property.image}" alt="${property.title}">
 
-if(searchBtn){
+<h3>${property.title}</h3>
 
-searchBtn.addEventListener("click",()=>{
+<p>📍 ${property.location}</p>
 
-const location=document
-.getElementById("searchLocation")
-.value
-.toLowerCase();
+<div class="price">
 
-const filtered=sampleProperties.filter(property=>
+${property.price}
 
-property.location
-.toLowerCase()
-.includes(location)
+</div>
 
-);
+<a href="#" class="primary-btn">
 
-renderProperties(filtered);
+View Details
+
+</a>
+
+</div>
+
+`;
 
 });
 
 }
 // ===========================
-// Publish Property (Demo)
+// Load Properties from Firestore
+// ===========================
+
+async function loadProperties() {
+
+    properties = [];
+
+    const q = query(propertyRef, orderBy("title"));
+
+    const snapshot = await getDocs(q);
+
+    snapshot.forEach((doc) => {
+
+        properties.push({
+            id: doc.id,
+            ...doc.data()
+        });
+
+    });
+
+    renderProperties(properties);
+
+}
+
+loadProperties();
+
+// ===========================
+// Search Properties
+// ===========================
+
+const searchBtn = document.getElementById("searchBtn");
+
+if (searchBtn) {
+
+    searchBtn.addEventListener("click", () => {
+
+        const location = document
+            .getElementById("searchLocation")
+            .value
+            .toLowerCase();
+
+        const filtered = properties.filter(property =>
+            property.location
+                .toLowerCase()
+                .includes(location)
+        );
+
+        renderProperties(filtered);
+
+    });
+
+} 
+// ===========================
+// Publish Property to Firestore
 // ===========================
 
 const publishBtn = document.getElementById("publishBtn");
 
 if (publishBtn) {
 
-    publishBtn.addEventListener("click", () => {
+    publishBtn.addEventListener("click", async () => {
 
-        const title = document.getElementById("title").value;
-        const location = document.getElementById("location").value;
-        const price = document.getElementById("price").value;
+        const title = document.getElementById("title").value.trim();
+        const location = document.getElementById("location").value.trim();
+        const price = document.getElementById("price").value.trim();
 
         if (!title || !location || !price) {
+
             alert("Please fill all required fields.");
+
             return;
+
         }
 
         const newProperty = {
+
             title: title,
             location: location,
             price: "₹" + price,
             image: "images/no-image.jpg"
+
         };
 
-        sampleProperties.unshift(newProperty);
+        try {
 
-        renderProperties(sampleProperties);
+            await addDoc(propertyRef, newProperty);
 
-        closePopup();
+            alert("Property Published Successfully!");
 
-        alert("Property added successfully!");
+            closePopup();
 
-        document.getElementById("title").value = "";
-        document.getElementById("layout").value = "";
-        document.getElementById("price").value = "";
-        document.getElementById("sqyard").value = "";
-        document.getElementById("location").value = "";
-        document.getElementById("maps").value = "";
-        document.getElementById("description").value = "";
-        document.getElementById("images").value = "";
+            loadProperties();
+
+            document.getElementById("title").value = "";
+            document.getElementById("layout").value = "";
+            document.getElementById("price").value = "";
+            document.getElementById("sqyard").value = "";
+            document.getElementById("location").value = "";
+            document.getElementById("maps").value = "";
+            document.getElementById("description").value = "";
+            document.getElementById("images").value = "";
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert("Failed to publish property.");
+
+        }
+
+    });
+
+}
+// ===========================
+// Preview Button (Temporary)
+// ===========================
+
+const previewBtn = document.getElementById("previewBtn");
+
+if (previewBtn) {
+
+    previewBtn.addEventListener("click", () => {
+
+        alert("Preview feature will be added soon.");
 
     });
 
 }
 
-console.log("MVR Properties V2 Loaded Successfully");
+// ===========================
+// Initial Load
+// ===========================
+
+loadProperties();
+
+// ===========================
+// Console
+// ===========================
+
+console.log("✅ MVR Properties V3 Loaded Successfully");
