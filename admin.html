@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Login - MVR Properties</title>
+
+<title>MVR Properties - Admin</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -11,20 +14,196 @@
 
 <body>
 
-<div class="admin-login">
+<header>
 
-<h1>MVR Properties</h1>
+<div class="container">
 
-<h2>Admin Login</h2>
+<div class="logo">
 
-<input type="email" placeholder="Email">
-
-<input type="password" placeholder="Password">
-
-<button>Login</button>
-
-<a href="index.html">← Back to Home</a>
+<h2>MVR <span>Properties</span></h2>
 
 </div>
+
+<nav>
+
+<a href="index.html">Home</a>
+
+</nav>
+
+</div>
+
+</header>
+
+<section class="contact" style="padding-top:120px;">
+
+<div class="container">
+
+<h2>Admin Panel</h2>
+
+<p>Manage Property Listings</p>
+
+</div>
+
+</section>
+
+<section class="properties">
+
+<div class="container">
+
+<h2>Add Property</h2>
+
+<div class="popup-content" style="display:block;max-width:700px;margin:auto;">
+
+<input type="text" id="title" placeholder="Property Title">
+
+<input type="text" id="layout" placeholder="Layout Name">
+
+<select id="type">
+
+<option value="">Property Type</option>
+<option>Open Plot</option>
+<option>House</option>
+<option>Apartment</option>
+<option>Villa</option>
+<option>Commercial</option>
+<option>Farm Land</option>
+
+</select>
+
+<input type="number" id="price" placeholder="Price">
+
+<input type="number" id="sqyard" placeholder="Price Per Sq.Yard">
+
+<input type="text" id="location" placeholder="Location">
+
+<input type="text" id="maps" placeholder="Google Maps Link">
+
+<textarea id="description" placeholder="Property Description"></textarea>
+
+<input type="file" id="images" multiple>
+
+<button id="publishBtn">
+
+Publish Property
+
+</button>
+
+</div>
+
+</div>
+
+</section>
+ <!-- ===========================
+PROPERTY LIST
+=========================== -->
+
+<section class="properties">
+
+<div class="container">
+
+<h2>All Properties</h2>
+
+<div id="adminPropertyContainer" class="property-grid">
+
+<!-- Properties will load here -->
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ===========================
+FOOTER
+=========================== -->
+
+<footer>
+
+<div class="container">
+
+<h3>MVR Properties</h3>
+
+<p>
+
+© 2026 MVR Properties. All Rights Reserved.
+
+</p>
+
+</div>
+
+</footer>
+
+<script type="module">
+
+import { db } from "./firebase.js";
+
+import {
+collection,
+getDocs,
+deleteDoc,
+doc
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+const container = document.getElementById("adminPropertyContainer");
+
+async function loadAdminProperties(){
+
+container.innerHTML="";
+
+const snapshot = await getDocs(collection(db,"properties"));
+
+snapshot.forEach((item)=>{
+
+const data=item.data();
+
+container.innerHTML += `
+<div class="property-card">
+
+<img src="${data.image || 'https://via.placeholder.com/600x400'}">
+
+<div class="property-content">
+
+<h3>${data.title}</h3>
+
+<p><b>Type:</b> ${data.type}</p>
+
+<p><b>Location:</b> ${data.location}</p>
+
+<div class="price">₹${data.price}</div>
+
+<button onclick="deleteProperty('${item.id}')">
+
+Delete
+
+</button>
+
+</div>
+
+</div>
+`;
+
+});
+
+}
+
+window.deleteProperty = async(id)=>{
+
+if(confirm("Delete this property?")){
+
+await deleteDoc(doc(db,"properties",id));
+
+loadAdminProperties();
+
+}
+
+};
+
+loadAdminProperties();
+
+</script>
+
+<script type="module" src="script.js"></script>
+
 </body>
-</html>
+
+</html> 
