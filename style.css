@@ -467,7 +467,34 @@ nav{
 }
 
    }
+/* Mobile Popup Fix */
 
+.popup-content{
+    max-height:90vh;
+    overflow-y:auto;
+    padding-bottom:30px;
+}
+
+#previewBtn,
+#publishBtn{
+    width:100%;
+    margin-top:15px;
+}
+
+@media (max-width:768px){
+
+.popup-content{
+    width:95%;
+    margin:15px auto;
+    max-height:85vh;
+}
+
+#publishBtn{
+    position:sticky;
+    bottom:0;
+}
+
+}
 
     
 
