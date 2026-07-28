@@ -1,13 +1,13 @@
 // ==========================
-// IMPORT FIREBASE
+// IMPORTS
 // ==========================
 
 import { db } from "./firebase.js";
 
 import {
-collection,
-addDoc,
-getDocs
+  collection,
+  addDoc,
+  getDocs
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 // ==========================
@@ -17,17 +17,17 @@ getDocs
 const popup = document.getElementById("popup");
 
 window.openPopup = function () {
-    popup.style.display = "flex";
+  if (popup) popup.style.display = "flex";
 };
 
 window.closePopup = function () {
-    popup.style.display = "none";
+  if (popup) popup.style.display = "none";
 };
 
 window.onclick = function (e) {
-    if (e.target === popup) {
-        closePopup();
-    }
+  if (e.target === popup) {
+    closePopup();
+  }
 };
 
 // ==========================
@@ -37,17 +37,15 @@ window.onclick = function (e) {
 const menuBtn = document.getElementById("menuBtn");
 const navbar = document.getElementById("navbar");
 
-if (menuBtn) {
-    menuBtn.addEventListener("click", () => {
-
-        if (navbar.style.display === "flex") {
-            navbar.style.display = "none";
-        } else {
-            navbar.style.display = "flex";
-            navbar.style.flexDirection = "column";
-        }
-
-    });
+if (menuBtn && navbar) {
+  menuBtn.addEventListener("click", () => {
+    if (navbar.style.display === "flex") {
+      navbar.style.display = "none";
+    } else {
+      navbar.style.display = "flex";
+      navbar.style.flexDirection = "column";
+    }
+  });
 }
 
 // ==========================
@@ -56,31 +54,46 @@ if (menuBtn) {
 
 async function loadProperties() {
 
-    const container = document.getElementById("propertyContainer");
+  const container = document.getElementById("propertyContainer");
 
-    if (!container) return;
+  if (!container) return;
 
-    container.innerHTML = "";
+  container.innerHTML = "";
 
-    const snapshot = await getDocs(collection(db, "properties"));
+  const snapshot = await getDocs(collection(db, "properties"));
 
-    snapshot.forEach((doc) => {
+  snapshot.forEach((doc) => {
 
-        const p = doc.data();
+    const p = doc.data();
 
-        container.innerHTML += `
-        <div class="property-card">
+    container.innerHTML += `
+      <div class="property-card">
 
-            <img src="${p.image || 'https://via.placeholder.com/600x400'}">
+        <img src="${p.image || 'https://via.placeholder.com/600x400'}" alt="Property">
 
-            <div class="property-content">
+        <div class="property-content">
 
-                <h3>${p.title}</h3>
+          <h3>${p.title}</h3>
 
-                <p><b>Type:</b> ${p.type}</p>
+          <p><b>Type:</b> ${p.type}</p>
 
-                <p><b>Location:</b> ${
-       // ==========================
+          <p><b>Location:</b> ${p.location}</p>
+
+          <div class="price">
+            ₹${p.price}
+          </div>
+
+        </div>
+
+      </div>
+    `;
+
+  });
+
+}
+
+loadProperties();
+// ==========================
 // PUBLISH PROPERTY
 // ==========================
 
@@ -88,40 +101,50 @@ const publishBtn = document.getElementById("publishBtn");
 
 if (publishBtn) {
 
-    publishBtn.addEventListener("click", async () => {
+  publishBtn.addEventListener("click", async () => {
 
-        const title = document.getElementById("title").value.trim();
-        const layout = document.getElementById("layout").value.trim();
-        const type = document.getElementById("type").value;
-        const price = document.getElementById("price").value;
-        const sqyard = document.getElementById("sqyard").value;
-        const location = document.getElementById("location").value.trim();
-        const maps = document.getElementById("maps").value.trim();
-        const description = document.getElementById("description").value.trim();
+    try {
 
-        if (!title || !type || !price || !location) {
-            alert("Please fill all required fields.");
-            return;
-        }
+      const title = document.getElementById("title").value.trim();
+      const layout = document.getElementById("layout").value.trim();
+      const type = document.getElementById("type").value;
+      const price = document.getElementById("price").value;
+      const sqyard = document.getElementById("sqyard").value;
+      const locationValue = document.getElementById("location").value.trim();
+      const maps = document.getElementById("maps").value.trim();
+      const description = document.getElementById("description").value.trim();
 
-        await addDoc(collection(db, "properties"), {
-            title,
-            layout,
-            type,
-            price,
-            sqyard,
-            location,
-            maps,
-            description,
-            image: ""
-        });
+      if (!title || !type || !price || !locationValue) {
+        alert("Please fill all required fields.");
+        return;
+      }
 
-        alert("Property published successfully!");
+      await addDoc(collection(db, "properties"), {
+        title,
+        layout,
+        type,
+        price,
+        sqyard,
+        location: locationValue,
+        maps,
+        description,
+        image: ""
+      });
 
-        closePopup();
-        location.reload();
+      alert("Property published successfully!");
 
-    });
+      closePopup();
+
+      window.location.reload();
+
+    } catch (err) {
+
+      console.error(err);
+      alert("Publish failed: " + err.message);
+
+    }
+
+  });
 
 }
 
@@ -133,58 +156,53 @@ const searchBtn = document.getElementById("searchBtn");
 
 if (searchBtn) {
 
-    searchBtn.addEventListener("click", () => {
+  searchBtn.addEventListener("click", () => {
 
-        const keyword = document
-            .getElementById("searchLocation")
-            .value
-            .toLowerCase();
+    const keyword = document
+      .getElementById("searchLocation")
+      .value
+      .toLowerCase();
 
-        const cards = document.querySelectorAll(".property-card");
+    const cards = document.querySelectorAll(".property-card");
 
-        cards.forEach(card => {
+    cards.forEach(card => {
 
-            if (card.innerText.toLowerCase().includes(keyword)) {
-
-                card.style.display = "block";
-
-            } else {
-
-                card.style.display = "none";
-
-            }
-
-        });
+      if (card.innerText.toLowerCase().includes(keyword)) {
+        card.style.display = "";
+      } else {
+        card.style.display = "none";
+      }
 
     });
+
+  });
 
 }
 
 // ==========================
-// PREVIEW BUTTON
+// PREVIEW
 // ==========================
 
 const previewBtn = document.getElementById("previewBtn");
 
 if (previewBtn) {
 
-    previewBtn.addEventListener("click", () => {
+  previewBtn.addEventListener("click", () => {
 
-        alert(
+    alert(
 `Preview
 
 Title: ${document.getElementById("title").value}
-
 Type: ${document.getElementById("type").value}
-
 Location: ${document.getElementById("location").value}
-
 Price: ₹${document.getElementById("price").value}`
-        );
+    );
 
-    });
+  });
 
 }
+
+        
 
 
      
