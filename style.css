@@ -348,22 +348,29 @@ nav a:hover{
 /* ==========================
    POPUP
 ========================== */
+/* ==========================
+   POPUP
+========================== */
 
 .popup{
     display:none;
     position:fixed;
     inset:0;
     background:rgba(0,0,0,.75);
-    z-index:2000;
+    z-index:10000;
+    overflow-y:auto;
 }
 
 .popup-content{
     width:90%;
     max-width:700px;
-    margin:40px auto;
+    max-height:90vh;
+    margin:20px auto;
     background:#1b1b1b;
     padding:30px;
     border-radius:15px;
+    overflow-y:auto;
+    padding-bottom:30px;
 }
 
 .popup-content h2{
@@ -394,31 +401,33 @@ nav a:hover{
     margin-top:10px;
 }
 
+#previewBtn,
+#publishBtn{
+    width:100%;
+    margin-top:15px;
+}
+
 .close-btn{
     float:right;
     font-size:30px;
     cursor:pointer;
 }
 
-/* ==========================
-   FOOTER
-========================== */
+@media (max-width:768px){
 
-footer{
-    background:#000;
-    text-align:center;
-    padding:40px 20px;
-    margin-top:70px;
+    .popup-content{
+        width:95%;
+        margin:15px auto;
+        max-height:85vh;
+    }
+
+    #publishBtn{
+        position:sticky;
+        bottom:0;
+    }
+
 }
 
-footer h3{
-    color:#FFD700;
-    margin-bottom:10px;
-}
-
-footer p{
-    color:#ccc;
-}
 
 /* ==========================
    MOBILE
