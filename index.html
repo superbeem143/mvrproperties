@@ -9,12 +9,11 @@
 <title>MVR Properties</title>
 
 <meta name="description"
-content="Buy and Sell Open Plots, Villas, Apartments and Farm Lands">
+content="Buy, Sell & Rent Open Plots, Villas, Apartments and Farm Lands">
 
 <link rel="stylesheet" href="style.css">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -33,7 +32,9 @@ HEADER
 
 <div class="logo">
 
-<h2>MVR <span>Properties</span></h2>
+<h2>MVR <span>Properties</span>
+
+</h2>
 
 </div>
 
@@ -99,7 +100,7 @@ Explore Properties
 
 </a>
 
-<a href="#popup" class="secondary-btn">
+<a href="#" onclick="openPopup();return false;" class="secondary-btn">
 
 Post Property
 
@@ -134,54 +135,20 @@ placeholder="Enter Location">
 
 <select id="propertyType">
 
-<option value="">
-
-Property Type
-
-</option>
-
-<option>
-
-Open Plot
-
-</option>
-
-<option>
-
-House
-
-</option>
-
-<option>
-
-Apartment
-
-</option>
-
-<option>
-
-Villa
-
-</option>
-
-<option>
-
-Commercial
-
-</option>
-
-<option>
-
-Farm Land
-
-</option>
+<option value="">Property Type</option>
+<option>Open Plot</option>
+<option>House</option>
+<option>Apartment</option>
+<option>Villa</option>
+<option>Commercial</option>
+<option>Farm Land</option>
 
 </select>
 
 <input
 type="number"
-placeholder="Maximum Budget"
-id="budget">
+id="budget"
+placeholder="Maximum Budget">
 
 <button id="searchBtn">
 
@@ -194,8 +161,6 @@ Search
 </div>
 
 </section>
-
-<!-- Part 2 Starts Below -->
 <!-- ===========================
 FEATURED PROPERTIES
 =========================== -->
@@ -212,7 +177,7 @@ Discover premium plots, villas, apartments and farm lands.
 
 <div class="property-grid" id="propertyContainer">
 
-<!-- Properties will load here -->
+<!-- Properties Loaded From Firebase -->
 
 </div>
 
@@ -247,7 +212,7 @@ All properties are verified before publishing.
 <h3>📍 Prime Locations</h3>
 
 <p>
-Best layouts and residential areas.
+Best layouts in premium residential areas.
 </p>
 
 </div>
@@ -257,7 +222,7 @@ Best layouts and residential areas.
 <h3>💰 Best Price</h3>
 
 <p>
-Affordable prices with transparent deals.
+Transparent pricing with affordable deals.
 </p>
 
 </div>
@@ -267,7 +232,7 @@ Affordable prices with transparent deals.
 <h3>🤝 Trusted Support</h3>
 
 <p>
-Our team helps you from enquiry to registration.
+Complete support from enquiry to registration.
 </p>
 
 </div>
@@ -313,13 +278,11 @@ class="whatsapp-btn">
 </div>
 
 </section>
-
-<!-- Part 3 Starts Below -->
-<!-- ===========================
+    <!-- ===========================
 ADD PROPERTY BUTTON
 =========================== -->
 
-<a href="#" class="add-property-btn" onclick="openPopup();return false;">
+<a href="#" class="add-property-btn" onclick="openPopup(); return false;">
 
 + Add Property
 
@@ -344,17 +307,11 @@ ADD PROPERTY POPUP
 <select id="type">
 
 <option value="">Property Type</option>
-
 <option>Open Plot</option>
-
 <option>House</option>
-
 <option>Apartment</option>
-
 <option>Villa</option>
-
 <option>Commercial</option>
-
 <option>Farm Land</option>
 
 </select>
@@ -416,6 +373,9 @@ FOOTER
 
 
 
-        
+
+
+
+
 
 
