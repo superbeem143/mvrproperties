@@ -208,51 +208,20 @@ if (publishBtn) {
         const location = document.getElementById("location").value.trim();
         const price = document.getElementById("price").value.trim();
 
-        if (!title || !location || !price) {
+        console.log("Title:", title);
+        console.log("Location:", location);
+        console.log("Price:", price);
 
+        if (title === "" || location === "" || price === "") {
             alert("Please fill all required fields.");
-
             return;
-
         }
 
-        const newProperty = {
-
-            title: title,
-            location: location,
-            price: "₹" + price,
-            image: "images/no-image.jpg"
-
-        };
-
-        try {
-
-            await addDoc(propertyRef, newProperty);
-
-            alert("Property Published Successfully!");
-
-            closePopup();
-
-            loadProperties();
-
-            document.getElementById("title").value = "";
-            document.getElementById("layout").value = "";
-            document.getElementById("price").value = "";
-            document.getElementById("sqyard").value = "";
-            document.getElementById("location").value = "";
-            document.getElementById("maps").value = "";
-            document.getElementById("description").value = "";
-            document.getElementById("images").value = "";
-
-        } catch (error) {
-
-            console.error(error);
-
-            alert("Failed to publish property.");
-
-        }
+        alert("Validation Passed!");
 
     });
+
+}
 
 }
 // ===========================
