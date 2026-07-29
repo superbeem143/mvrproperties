@@ -445,5 +445,30 @@ cursor:pointer;
 .hidden{
 display:none !important;
 }
-    
+.slider-container{
+  position:relative;
+}
+
+.slider-btn{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  width:42px;
+  height:42px;
+  border:none;
+  border-radius:50%;
+  background:rgba(0,0,0,0.6);
+  color:#fff;
+  font-size:20px;
+  cursor:pointer;
+  z-index:10;
+}
+
+#prevImage{
+  left:10px;
+}
+
+#nextImage{
+  right:10px;
+}    
     
