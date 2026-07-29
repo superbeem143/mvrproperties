@@ -1,13 +1,14 @@
 import { db } from "./firebase.js";
 
 import {
-  collection,
-  addDoc,
-  getDocs,
-  serverTimestamp
+collection,
+getDocs,
+addDoc,
+serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 const propertyList = document.getElementById("propertyList");
+const latestProperties = document.getElementById("latestProperties");
 
 const addPropertyBtn = document.getElementById("addPropertyBtn");
 const propertyModal = document.getElementById("propertyModal");
@@ -21,24 +22,33 @@ const title = document.getElementById("title");
 const price = document.getElementById("price");
 const location = document.getElementById("location");
 const layout = document.getElementById("layout");
+const maps = document.getElementById("maps");
 const phone = document.getElementById("phone");
 const description = document.getElementById("description");
+const amenities = document.getElementById("amenities");
 const image = document.getElementById("image");
-  
+
+let allProperties = [];
 async function loadProperties() {
 
   propertyList.innerHTML = "";
+  if (latestProperties) latestProperties.innerHTML = "";
 
   const snapshot = await getDocs(collection(db, "properties"));
+
+  allProperties = [];
 
   snapshot.forEach((doc) => {
 
     const data = doc.data();
+    data.id = doc.id;
 
-    propertyList.innerHTML += `
-      <div class="property-card">
+    allProperties.push(data);
 
-        <img src="${data.image || 'https://via.placeholder.com/400x250?text=Property'}">
+    const card = `
+      <div class="property-card fade">
+
+        <img src="${(data.images && data.images[0]) || data.image || 'https://via.placeholder.com/400x250'}">
 
         <div class="property-info">
 
@@ -46,13 +56,10 @@ async function loadProperties() {
 
           <p><strong>💰 Price:</strong> ₹${data.price}</p>
 
-          <p><strong>📍 Location:</strong> ${data.location}</p>
+          <p><strong>📍 ${data.location}</strong></p>
 
-          <p><strong>🏘 Layout:</strong> ${data.layout}</p>
-
-          <p><strong>📞 Phone:</strong> ${data.phone}</p>
-
-          <button class="gold-btn">
+          <button class="gold-btn"
+            onclick="showDetails('${data.id}')">
             View Details
           </button>
 
@@ -61,12 +68,17 @@ async function loadProperties() {
       </div>
     `;
 
+    propertyList.innerHTML += card;
+
+    if (latestProperties) {
+      latestProperties.innerHTML += card;
+    }
+
   });
 
 }
 
 loadProperties();
-
 addPropertyBtn.onclick = () => {
   propertyModal.style.display = "flex";
 };
@@ -81,56 +93,74 @@ window.onclick = (e) => {
   }
 };
 
-publishBtn.onclick = async () => {
-let imageUrl = "";
+window.showDetails = function(id) {
 
-if (image.files.length > 0) {
+  const property = allProperties.find(p => p.id === id);
 
-  const formData = new FormData();
+  if (!property) return;
 
-  formData.append("file", image.files[0]);
-  formData.append("upload_preset", "mvrproperties");
+  alert(
+`🏠 ${property.title}
 
-  const res = await fetch(
-    "https://api.cloudinary.com/v1_1/onrnn2hn/image/upload",
-    {
-      method: "POST",
-      body: formData
-    }
+💰 Price: ₹${property.price}
+
+📍 Location: ${property.location}
+
+🏘 Layout: ${property.layout}
+
+📞 Phone: ${property.phone}
+
+📝 ${property.description || ""}`
   );
 
-  const data = await res.json();
+};
+publishBtn.onclick = async () => {
 
-  imageUrl = data.secure_url;
-
-}
   try {
-await addDoc(collection(db, "properties"), {
 
-  title: title.value,
-  price: price.value,
-  location: location.value,
-  layout: layout.value,
-  phone: phone.value,
-  description: description.value,
-  image: imageUrl,
-  createdAt: serverTimestamp()
+    let imageUrls = [];
 
-});
+    if (image.files.length > 0) {
+
+      for (const file of image.files) {
+
+        const formData = new FormData();
+
+        formData.append("file", file);
+        formData.append("upload_preset", "mvrproperties");
+
+        const res = await fetch(
+          "https://api.cloudinary.com/v1_1/onrnn2hn/image/upload",
+          {
+            method: "POST",
+            body: formData
+          }
+        );
+
+        const data = await res.json();
+
+        imageUrls.push(data.secure_url);
+
+      }
+
+    }
+
     await addDoc(collection(db, "properties"), {
 
       title: title.value,
       price: price.value,
       location: location.value,
       layout: layout.value,
+      maps: maps.value,
       phone: phone.value,
       description: description.value,
-      image: imageUrl,
+      amenities: amenities.value,
+      images: imageUrls,
       createdAt: serverTimestamp()
 
     });
 
-    alert("✅ Property Published Successfully!");
+    alert("✅ Property Published!");
 
     propertyModal.style.display = "none";
 
@@ -140,27 +170,19 @@ await addDoc(collection(db, "properties"), {
 
     console.error(err);
 
-    alert("❌ " + err.message);
+    alert(err.message);
 
   }
 
 };
 
+document.addEventListener("click", (e) => {
 
-searchInput.addEventListener("input", () => {
+  if (e.target.classList.contains("gallery-thumb")) {
 
-  const text = searchInput.value.toLowerCase();
+    document.getElementById("detailImage").src = e.target.src;
 
-  document.querySelectorAll(".property-card").forEach(card => {
-
-    if (card.innerText.toLowerCase().includes(text)) {
-      card.style.display = "block";
-    } else {
-      card.style.display = "none";
-    }
-
-  });
+  }
 
 });
-
-console.log("✅ MVR Properties Luxury Edition Loaded");
+  
