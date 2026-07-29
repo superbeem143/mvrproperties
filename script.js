@@ -3,7 +3,7 @@
 // ==========================
 
 import { db } from "./firebase.js";
-
+alert("script.js loaded");
 import {
   collection,
   addDoc,
