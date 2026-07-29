@@ -1,159 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>MVR Properties</title>
-
-<meta name="description"
-content="Buy, Sell & Rent Open Plots, Villas, Apartments and Farm Lands">
+<title>MVR Properties | Luxury Real Estate</title>
 
 <link rel="stylesheet" href="style.css">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
 </head>
 
 <body>
 
-<!-- ===========================
-HEADER
-=========================== -->
+<header class="header">
+    <div class="logo">
+        🏡 <span>MVR</span> Properties
+    </div>
 
-<header>
+    <nav>
+        <a href="#">Home</a>
+        <a href="#featured">Featured</a>
+        <a href="#latest">Latest</a>
+        <a href="#contact">Contact</a>
+    </nav>
 
-<div class="container">
-
-<div class="logo">
-
-<h2>MVR <span>Properties</span>
-
-</h2>
-
-</div>
-
-<nav id="navbar">
-
-<a href="#">Home</a>
-
-<a href="#properties">Properties</a>
-
-<a href="#about">About</a>
-
-<a href="#contact">Contact</a>
-
-<a href="admin.html" class="admin-btn">
-
-Admin Login
-
-</a>
-
-</nav>
-
-<div class="menu-btn" id="menuBtn">
-
-☰
-
-</div>
-
-</div>
-
+    <button id="addPropertyBtn" class="gold-btn">
+        + Add Property
+    </button>
 </header>
-
-<!-- ===========================
-HERO SECTION
-=========================== -->
 
 <section class="hero">
 
-<div class="hero-overlay"></div>
+<div class="overlay">
 
-<div class="hero-content">
-
-<h1>
-
-Find Your Dream Property
-
-</h1>
+<h1>Luxury Properties<br>For Your Dream Life</h1>
 
 <p>
-
-Buy • Sell • Rent
-
-<br>
-
-Open Plots • Villas • Apartments • Farm Lands
-
+Buy • Sell • Rent Premium Properties
 </p>
-
-<div class="hero-buttons">
-
-<a href="#properties" class="primary-btn">
-
-Explore Properties
-
-</a>
-
-<a href="#" onclick="openPopup();return false;" class="secondary-btn">
-
-Post Property
-
-</a>
-
-</div>
-
-</div>
-
-</section>
-
-<!-- ===========================
-SEARCH
-=========================== -->
-
-<section class="search-section">
-
-<div class="container">
-
-<h2>
-
-Search Properties
-
-</h2>
 
 <div class="search-box">
 
 <input
 type="text"
-id="searchLocation"
-placeholder="Enter Location">
+id="searchInput"
+placeholder="Search by city, layout or property">
 
-<select id="propertyType">
-
-<option value="">Property Type</option>
-<option>Open Plot</option>
-<option>House</option>
-<option>Apartment</option>
-<option>Villa</option>
-<option>Commercial</option>
-<option>Farm Land</option>
-
-</select>
-
-<input
-type="number"
-id="budget"
-placeholder="Maximum Budget">
-
-<button id="searchBtn">
-
+<button class="gold-btn">
 Search
-
 </button>
 
 </div>
@@ -161,221 +57,85 @@ Search
 </div>
 
 </section>
-<!-- ===========================
-FEATURED PROPERTIES
-=========================== -->
 
-<section id="properties" class="properties">
+<section id="featured" class="section">
 
-<div class="container">
+<h2>⭐ Featured Properties</h2>
 
-<h2>Featured Properties</h2>
+<div id="propertyList" class="property-grid">
 
-<p class="section-title">
-Discover premium plots, villas, apartments and farm lands.
-</p>
-
-<div class="property-grid" id="propertyContainer">
-
-<!-- Properties Loaded From Firebase -->
-
-</div>
+<!-- Firebase properties will load here -->
 
 </div>
 
 </section>
+<!-- Add Property Popup -->
+<div id="propertyModal" class="modal">
 
-<!-- ===========================
-WHY CHOOSE MVR
-=========================== -->
+  <div class="modal-content">
 
-<section id="about" class="why-mvr">
+    <span id="closeModal" class="close">&times;</span>
 
-<div class="container">
+    <h2>Add New Property</h2>
 
-<h2>Why Choose MVR Properties?</h2>
+    <input type="text" id="title" placeholder="Property Title">
 
-<div class="why-grid">
+    <input type="number" id="price" placeholder="Price">
 
-<div class="why-card">
+    <input type="text" id="location" placeholder="Location">
 
-<h3>🏡 Verified Properties</h3>
+    <input type="text" id="layout" placeholder="Layout Name">
 
-<p>
-All properties are verified before publishing.
-</p>
+    <input type="text" id="phone" value="8639496081" placeholder="Phone Number">
 
-</div>
+    <textarea id="description" placeholder="Property Description"></textarea>
 
-<div class="why-card">
+    <input type="file" id="image" accept="image/*">
 
-<h3>📍 Prime Locations</h3>
+    <button id="publishBtn" class="gold-btn">
+      Publish Property
+    </button>
 
-<p>
-Best layouts in premium residential areas.
-</p>
+  </div>
 
 </div>
 
-<div class="why-card">
+<!-- Contact Section -->
+<section id="contact" class="section">
 
-<h3>💰 Best Price</h3>
+<h2>📞 Contact Us</h2>
 
-<p>
-Transparent pricing with affordable deals.
-</p>
-
-</div>
-
-<div class="why-card">
-
-<h3>🤝 Trusted Support</h3>
-
-<p>
-Complete support from enquiry to registration.
-</p>
-
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-<!-- ===========================
-CONTACT
-=========================== -->
-
-<section id="contact" class="contact">
-
-<div class="container">
-
-<h2>Contact Us</h2>
-
-<p>
-Need help finding your dream property?
-</p>
-
-<div class="contact-buttons">
-
-<a href="tel:+918639496081" class="call-btn">
-
-📞 Call Now
-
-</a>
-
-<a href="https://wa.me/918639496081"
-target="_blank"
-class="whatsapp-btn">
-
-💬 WhatsApp
-
-</a>
-
-</div>
-
-</div>
-
-</section>
-    <!-- ===========================
-ADD PROPERTY BUTTON
-=========================== -->
-
-<a href="#" class="add-property-btn" onclick="openPopup(); return false;">
-
-+ Add Property
-
-</a>
-
-<!-- ===========================
-ADD PROPERTY POPUP
-=========================== -->
-
-<div class="popup" id="popup">
-
-<div class="popup-content">
-
-<span class="close-btn" onclick="closePopup()">&times;</span>
-
-<h2>Add New Property</h2>
-
-<input type="text" id="title" placeholder="Property Title">
-
-<input type="text" id="layout" placeholder="Layout Name">
-
-<select id="type">
-
-<option value="">Property Type</option>
-<option>Open Plot</option>
-<option>House</option>
-<option>Apartment</option>
-<option>Villa</option>
-<option>Commercial</option>
-<option>Farm Land</option>
-
-</select>
-
-<input type="number" id="price" placeholder="Price">
-
-<input type="number" id="sqyard" placeholder="Price Per Sq.Yard">
-
-<input type="text" id="location" placeholder="Location">
-
-<input type="text" id="maps" placeholder="Google Maps Link">
-
-<textarea id="description" placeholder="Property Description"></textarea>
-
-<input type="file" id="images" multiple accept="image/*">
-
-<button id="previewBtn">
-
-Preview
-
-</button>
-
-<button id="publishBtn">
-
-Publish Property
-
-</button>
-
-</div>
-
-</div>
-
-<!-- ===========================
-FOOTER
-=========================== -->
-
-<footer>
-
-<div class="container">
+<div class="contact-box">
 
 <h3>MVR Properties</h3>
 
+<p>Luxury Real Estate Services</p>
+
+<p>📞 8639496081</p>
+
 <p>
+<a href="tel:8639496081" class="gold-btn">
+Call Now
+</a>
+</p>
 
-© 2026 MVR Properties. All Rights Reserved.
-
+<p>
+<a href="https://wa.me/918639496081" class="gold-btn" target="_blank">
+WhatsApp
+</a>
 </p>
 
 </div>
 
+</section>
+
+<footer>
+
+<p>© 2026 MVR Properties. All Rights Reserved.</p>
+
 </footer>
 
-<script type="module" src="firebase.js"></script>
 <script type="module" src="script.js"></script>
 
 </body>
-
 </html>
-
-
-
-
-
-
-
-
-
