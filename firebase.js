@@ -1,34 +1,41 @@
 /*=====================================
 MVR PROPERTIES
-firebase.js - Part 1
+firebase.js
+Part 1
 =====================================*/
 
-// =============================
-// Firebase SDK Imports
-// =============================
+// Firebase SDK
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+import {
+getAuth,
+signInWithEmailAndPassword,
+signOut,
+onAuthStateChanged,
+sendPasswordResetEmail,
+setPersistence,
+browserLocalPersistence,
+browserSessionPersistence
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
 import {
 getFirestore,
 collection,
-getDocs,
 addDoc,
+getDocs,
 updateDoc,
 deleteDoc,
 doc,
+getDoc,
+onSnapshot,
 query,
 orderBy,
 serverTimestamp
-} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
-import {
-getStorage
-} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-storage.js";
-
-// =============================
+// =====================================
 // Firebase Configuration
-// =============================
+// =====================================
 
 const firebaseConfig = {
 
@@ -46,187 +53,257 @@ appId: "YOUR_APP_ID"
 
 };
 
-// =============================
+// =====================================
 // Initialize Firebase
-// =============================
+// =====================================
 
 const app = initializeApp(firebaseConfig);
 
-export const db = getFirestore(app);
+const auth = getAuth(app);
 
-export const storage = getStorage(app);
+const db = getFirestore(app);
 
-// =============================
-// Cloudinary Configuration
-// =============================
+// =====================================
+// Collections
+// =====================================
 
-export const CLOUDINARY = {
+const PROPERTY_COLLECTION = "properties";
 
-cloudName: "YOUR_CLOUD_NAME",
+// =====================================
+// Login
+// =====================================
 
-uploadPreset: "YOUR_UPLOAD_PRESET"
+export async function loginUser(email,password,remember){
 
-};
-/*=====================================
-MVR PROPERTIES
-firebase.js - Part 2
-=====================================*/
+await setPersistence(
 
-import {
-collection,
-getDocs,
-addDoc,
-updateDoc,
-deleteDoc,
-doc,
-query,
-orderBy,
-serverTimestamp
-} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+auth,
 
-import { db } from "./firebase.js";
+remember
 
-// =============================
-// Collection Reference
-// =============================
+? browserLocalPersistence
 
-const propertiesRef = collection(db, "properties");
+: browserSessionPersistence
 
-// =============================
-// Get All Properties
-// =============================
-
-export async function getProperties(){
-
-const q = query(
-propertiesRef,
-orderBy("createdAt","desc")
 );
 
-const snapshot = await getDocs(q);
+return signInWithEmailAndPassword(
 
-const properties = [];
+auth,
 
-snapshot.forEach(item=>{
+email,
 
-properties.push({
+password
 
-id:item.id,
+);
 
-...item.data()
+}
+
+// =====================================
+// Logout
+// =====================================
+
+export async function logoutUser(){
+
+return signOut(auth);
+
+}
+
+// =====================================
+// Current User
+// =====================================
+
+export function getCurrentUser(){
+
+return new Promise(resolve=>{
+
+const unsubscribe=
+
+onAuthStateChanged(auth,user=>{
+
+unsubscribe();
+
+resolve(user);
 
 });
 
 });
 
-return properties;
-
 }
 
-// =============================
-// Add Property
-// =============================
+// =====================================
+// Reset Password
+// =====================================
 
-export async function addProperty(property){
+export async function resetPassword(email){
 
-await addDoc(propertiesRef,{
+return sendPasswordResetEmail(
 
-...property,
+auth,
 
-createdAt:serverTimestamp()
+email
 
-});
-
-}
-
-// =============================
-// Update Property
-// =============================
-
-export async function updateProperty(id,data){
-
-const propertyDoc = doc(db,"properties",id);
-
-await updateDoc(propertyDoc,data);
-
-}
-
-// =============================
-// Delete Property
-// =============================
-
-export async function deleteProperty(id){
-
-const propertyDoc = doc(db,"properties",id);
-
-await deleteDoc(propertyDoc);
+);
 
   }
 /*=====================================
 MVR PROPERTIES
-firebase.js - Part 3
+firebase.js
+Part 2
 =====================================*/
 
-import {
-collection,
-query,
-orderBy,
-onSnapshot
-} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+// =====================================
+// Add Property
+// =====================================
 
-import { db } from "./firebase.js";
+export async function addProperty(property){
 
-// =============================
-// Real-time Property Listener
-// =============================
+property.createdAt = serverTimestamp();
+
+const docRef = await addDoc(
+
+collection(db, PROPERTY_COLLECTION),
+
+property
+
+);
+
+return docRef.id;
+
+}
+
+// =====================================
+// Get All Properties
+// =====================================
+
+export async function getProperties(){
+
+const q = query(
+
+collection(db, PROPERTY_COLLECTION),
+
+orderBy("createdAt","desc")
+
+);
+
+const snapshot = await getDocs(q);
+
+return snapshot.docs.map(docItem=>({
+
+id: docItem.id,
+
+...docItem.data()
+
+}));
+
+}
+
+// =====================================
+// Get Single Property
+// =====================================
+
+export async function getProperty(id){
+
+const ref = doc(db, PROPERTY_COLLECTION, id);
+
+const snapshot = await getDoc(ref);
+
+if(!snapshot.exists()){
+
+throw new Error("Property not found.");
+
+}
+
+return{
+
+id:snapshot.id,
+
+...snapshot.data()
+
+};
+
+}
+
+// =====================================
+// Update Property
+// =====================================
+
+export async function updateProperty(id,data){
+
+const ref = doc(db, PROPERTY_COLLECTION, id);
+
+await updateDoc(ref,data);
+
+}
+
+// =====================================
+// Delete Property
+// =====================================
+
+export async function deleteProperty(id){
+
+const ref = doc(db, PROPERTY_COLLECTION, id);
+
+await deleteDoc(ref);
+
+}
+
+// =====================================
+// Realtime Listener
+// =====================================
 
 export function watchProperties(callback){
 
 const q = query(
-collection(db,"properties"),
+
+collection(db, PROPERTY_COLLECTION),
+
 orderBy("createdAt","desc")
+
 );
 
 return onSnapshot(q,(snapshot)=>{
 
-const properties=[];
+const properties = snapshot.docs.map(docItem=>({
 
-snapshot.forEach(doc=>{
+id:docItem.id,
 
-properties.push({
+...docItem.data()
 
-id:doc.id,
-
-...doc.data()
-
-});
-
-});
+}));
 
 callback(properties);
 
 });
 
-}
+                         }
+/*=====================================
+MVR PROPERTIES
+firebase.js
+Part 3
+=====================================*/
 
-// =============================
-// Cloudinary Upload
-// =============================
+// =====================================
+// Cloudinary Configuration
+// =====================================
+
+const CLOUD_NAME = "YOUR_CLOUD_NAME";
+const UPLOAD_PRESET = "YOUR_UPLOAD_PRESET";
+
+// =====================================
+// Upload Image
+// =====================================
 
 export async function uploadImage(file){
 
-const formData=new FormData();
+const formData = new FormData();
 
-formData.append("file",file);
+formData.append("file", file);
+formData.append("upload_preset", UPLOAD_PRESET);
 
-formData.append(
-"upload_preset",
-CLOUDINARY.uploadPreset
-);
+const response = await fetch(
 
-const response=await fetch(
-
-`https://api.cloudinary.com/v1_1/${CLOUDINARY.cloudName}/image/upload`,
+`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
 
 {
 
@@ -238,49 +315,90 @@ body:formData
 
 );
 
-const data=await response.json();
+if(!response.ok){
+
+throw new Error("Image upload failed.");
+
+}
+
+const data = await response.json();
 
 return data.secure_url;
 
 }
 
-// =============================
-// Date Formatter
-// =============================
+// =====================================
+// Upload Multiple Images
+// =====================================
 
-export function formatDate(timestamp){
+export async function uploadImages(files){
 
-if(!timestamp) return "";
+const urls = [];
 
-const date = timestamp.toDate();
+for(const file of files){
 
-return date.toLocaleDateString("en-IN",{
+const imageUrl = await uploadImage(file);
 
-day:"2-digit",
-month:"short",
-year:"numeric"
-
-});
+urls.push(imageUrl);
 
 }
 
-// =============================
-// Price Formatter
-// =============================
-
-export function formatPrice(price){
-
-return new Intl.NumberFormat("en-IN",{
-
-maximumFractionDigits:0
-
-}).format(price);
+return urls;
 
 }
 
-// =============================
-// Ready
-// =============================
+// =====================================
+// Featured Properties
+// =====================================
 
-console.log("✅ Firebase Connected");
-console.log("☁️ Cloudinary Ready");
+export async function getFeaturedProperties(){
+
+const properties = await getProperties();
+
+return properties.filter(property=>property.featured===true);
+
+}
+
+// =====================================
+// Search Properties
+// =====================================
+
+export async function searchProperties(keyword){
+
+const properties = await getProperties();
+
+const search = keyword.toLowerCase();
+
+return properties.filter(property=>
+
+(property.title || "")
+.toLowerCase()
+.includes(search)
+
+||
+
+(property.location || "")
+.toLowerCase()
+.includes(search)
+
+||
+
+(property.type || "")
+.toLowerCase()
+.includes(search)
+
+);
+
+}
+
+// =====================================
+// Utility
+// =====================================
+
+export {
+
+auth,
+
+db
+
+};
