@@ -3,117 +3,144 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MVR Properties - Admin Login</title>
+
+<title>MVR Properties | Admin Login</title>
 
 <link rel="stylesheet" href="style.css">
 
 <style>
 
-body{
+*{
 margin:0;
 padding:0;
+box-sizing:border-box;
 font-family:Arial,sans-serif;
-background:linear-gradient(135deg,#0f172a,#1e3a8a);
+}
+
+body{
+min-height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-height:100vh;
+background:linear-gradient(135deg,#0f172a,#1e3a8a);
+padding:20px;
 }
 
-.login-box{
-
-width:380px;
-background:white;
+.login-container{
+width:100%;
+max-width:420px;
+background:#fff;
 padding:35px;
-border-radius:15px;
+border-radius:18px;
 box-shadow:0 15px 40px rgba(0,0,0,.25);
-
 }
 
 .logo{
-
 text-align:center;
 font-size:32px;
 font-weight:bold;
-color:#1e40af;
+color:#1d4ed8;
 margin-bottom:10px;
-
 }
 
 .subtitle{
-
 text-align:center;
-color:#555;
-margin-bottom:25px;
-
+color:#666;
+margin-bottom:30px;
 }
 
 .input-group{
-
 margin-bottom:18px;
-
 }
 
 .input-group label{
-
 display:block;
 font-weight:bold;
-margin-bottom:6px;
-
+margin-bottom:8px;
 }
 
 .input-group input{
-
 width:100%;
-padding:12px;
+padding:13px;
+font-size:16px;
 border:1px solid #ccc;
 border-radius:8px;
-font-size:16px;
+outline:none;
+transition:.3s;
+}
 
+.input-group input:focus{
+border-color:#2563eb;
+box-shadow:0 0 5px rgba(37,99,235,.3);
+}
+
+.password-box{
+position:relative;
+}
+
+.password-box input{
+padding-right:45px;
+}
+
+#togglePassword{
+position:absolute;
+right:15px;
+top:50%;
+transform:translateY(-50%);
+cursor:pointer;
+user-select:none;
+font-size:18px;
 }
 
 .options{
-
 display:flex;
 justify-content:space-between;
 align-items:center;
+margin-bottom:25px;
 font-size:14px;
-margin-bottom:20px;
-
 }
 
 .options a{
-
 text-decoration:none;
-color:#1e40af;
-
+color:#2563eb;
 }
 
-button{
+.options a:hover{
+text-decoration:underline;
+}
 
+.login-btn{
 width:100%;
 padding:14px;
-border:none;
 background:#2563eb;
-color:white;
-font-size:17px;
+color:#fff;
+border:none;
 border-radius:8px;
+font-size:17px;
 cursor:pointer;
-
+transition:.3s;
 }
 
-button:hover{
-
+.login-btn:hover{
 background:#1d4ed8;
-
 }
 
 .footer{
-
 text-align:center;
 margin-top:20px;
 font-size:13px;
-color:#777;
+color:#888;
+}
+
+@media(max-width:480px){
+
+.login-container{
+padding:25px;
+}
+
+.logo{
+font-size:28px;
+}
 
 }
 
@@ -123,7 +150,7 @@ color:#777;
 
 <body>
 
-<div class="login-box">
+<div class="login-container">
 
 <div class="logo">
 🏠 MVR Properties
@@ -137,7 +164,7 @@ Admin Login
 
 <div class="input-group">
 
-<label>Email</label>
+<label for="email">Email</label>
 
 <input
 type="email"
@@ -149,7 +176,9 @@ required>
 
 <div class="input-group">
 
-<label>Password</label>
+<label for="password">Password</label>
+
+<div class="password-box">
 
 <input
 type="password"
@@ -157,137 +186,127 @@ id="password"
 placeholder="Enter Password"
 required>
 
+<span id="togglePassword">👁️</span>
+
+</div>
+
 </div>
 
 <div class="options">
 
 <label>
 
-<input type="checkbox">
+<input
+type="checkbox"
+id="rememberMe">
 
 Remember Me
 
 </label>
 
-<a href="#">
+<a href="#" id="forgotPassword">
+
 Forgot Password?
 
 </a>
 
 </div>
 
-<button type="submit">
+<button
+type="submit"
+class="login-btn">
 
 Login
 
 </button>
 
 </form>
+<!-- Login Status -->
+<div id="messageBox" class="message-box"></div>
 
-<div class="footer">
-
-© 2026 MVR Properties
-
-</div>
-
-</div>
-<!-- Loading -->
-<div id="loadingOverlay" class="loading-overlay" style="display:none;">
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="loading-overlay">
     <div class="loader"></div>
-    <p>Signing in...</p>
+    <p>Please wait...</p>
 </div>
-
-<!-- Message -->
-<div id="messageBox" class="message-box" style="display:none;"></div>
 
 <style>
 
-/* Password Container */
-.password-box{
-    position:relative;
+/* Message Box */
+
+.message-box{
+
+display:none;
+margin-top:15px;
+padding:12px;
+border-radius:8px;
+font-size:14px;
+font-weight:bold;
+text-align:center;
+
 }
 
-.password-box input{
-    width:100%;
-    padding-right:45px;
+.message-success{
+
+display:block;
+background:#dcfce7;
+color:#166534;
+border:1px solid #22c55e;
+
 }
 
-.toggle-password{
-    position:absolute;
-    right:15px;
-    top:50%;
-    transform:translateY(-50%);
-    cursor:pointer;
-    user-select:none;
-    font-size:18px;
+.message-error{
+
+display:block;
+background:#fee2e2;
+color:#991b1b;
+border:1px solid #ef4444;
+
 }
 
 /* Loading */
+
 .loading-overlay{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,.6);
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    color:#fff;
-    z-index:9999;
+
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.6);
+justify-content:center;
+align-items:center;
+flex-direction:column;
+z-index:9999;
+color:#fff;
+
 }
 
 .loader{
-    width:50px;
-    height:50px;
-    border:5px solid #fff;
-    border-top:5px solid #2563eb;
-    border-radius:50%;
-    animation:spin 1s linear infinite;
-    margin-bottom:15px;
+
+width:55px;
+height:55px;
+border:5px solid #fff;
+border-top:5px solid #2563eb;
+border-radius:50%;
+animation:spin 1s linear infinite;
+
+}
+
+.loading-overlay p{
+
+margin-top:15px;
+font-size:18px;
+
 }
 
 @keyframes spin{
-    100%{
-        transform:rotate(360deg);
-    }
-}
 
-/* Message */
-.message-box{
-    position:fixed;
-    top:20px;
-    right:20px;
-    padding:15px 20px;
-    border-radius:8px;
-    color:#fff;
-    font-weight:bold;
-    z-index:9999;
-}
+100%{
 
-.success{
-    background:#16a34a;
-}
+transform:rotate(360deg);
 
-.error{
-    background:#dc2626;
-}
-
-/* Mobile */
-@media(max-width:480px){
-
-.login-box{
-    width:92%;
-    padding:25px;
-}
-
-.logo{
-    font-size:28px;
-}
-
-button{
-    font-size:16px;
 }
 
 }
@@ -296,78 +315,93 @@ button{
 
 <script>
 
-// Show / Hide Password
+const loginForm=document.getElementById("loginForm");
 
-const passwordInput=document.getElementById("password");
+loginForm.addEventListener("submit",()=>{
 
-const wrapper=passwordInput.parentElement;
+document.getElementById("loadingOverlay").style.display="flex";
 
-wrapper.classList.add("password-box");
+});
 
-const eye=document.createElement("span");
+</script>
+    
+<div class="footer">
 
-eye.className="toggle-password";
+© 2026 MVR Properties
 
-eye.innerHTML="👁️";
+</div>
 
-wrapper.appendChild(eye);
+</div>
 
-eye.onclick=()=>{
+<script>
 
-if(passwordInput.type==="password"){
+const password=document.getElementById("password");
 
-passwordInput.type="text";
+const toggle=document.getElementById("togglePassword");
 
-eye.innerHTML="🙈";
+toggle.onclick=()=>{
+
+if(password.type==="password"){
+
+password.type="text";
+
+toggle.innerHTML="🙈";
 
 }else{
 
-passwordInput.type="password";
+password.type="password";
 
-eye.innerHTML="👁️";
+toggle.innerHTML="👁️";
 
 }
 
 };
 
 </script>
+
 <script type="module" src="login.js"></script>
 <script>
 
-// Theme Toggle
+// Theme Toggle Button
 const themeBtn = document.createElement("button");
+
+themeBtn.id = "themeBtn";
 themeBtn.innerHTML = "🌙";
+
 themeBtn.style.position = "fixed";
 themeBtn.style.top = "20px";
 themeBtn.style.right = "20px";
-themeBtn.style.width = "45px";
-themeBtn.style.height = "45px";
-themeBtn.style.borderRadius = "50%";
+themeBtn.style.width = "50px";
+themeBtn.style.height = "50px";
 themeBtn.style.border = "none";
+themeBtn.style.borderRadius = "50%";
+themeBtn.style.background = "#2563eb";
+themeBtn.style.color = "#fff";
 themeBtn.style.cursor = "pointer";
-themeBtn.style.fontSize = "18px";
+themeBtn.style.fontSize = "20px";
+themeBtn.style.boxShadow = "0 5px 15px rgba(0,0,0,.2)";
+themeBtn.style.zIndex = "9999";
 
 document.body.appendChild(themeBtn);
 
-let dark = true;
+let darkMode = true;
 
 themeBtn.onclick = () => {
 
-dark = !dark;
+darkMode = !darkMode;
 
-if(dark){
+if(darkMode){
 
 document.body.style.background =
 "linear-gradient(135deg,#0f172a,#1e3a8a)";
 
-themeBtn.innerHTML="🌙";
+themeBtn.innerHTML = "🌙";
 
 }else{
 
-document.body.style.background =
-"#f5f5f5";
+document.body.style.background = "#f3f4f6";
 
-themeBtn.innerHTML="☀️";
+themeBtn.innerHTML = "☀️";
 
 }
 
@@ -375,69 +409,42 @@ themeBtn.innerHTML="☀️";
 
 // Caps Lock Warning
 
-const password=document.getElementById("password");
+const passwordInput = document.getElementById("password");
 
-const warning=document.createElement("small");
+const capsWarning = document.createElement("small");
 
-warning.style.color="red";
+capsWarning.innerHTML = "⚠ Caps Lock is ON";
 
-warning.style.display="none";
+capsWarning.style.display = "none";
+capsWarning.style.color = "#dc2626";
+capsWarning.style.fontWeight = "bold";
 
-warning.innerHTML="Caps Lock is ON";
+passwordInput.parentElement.appendChild(capsWarning);
 
-password.parentElement.appendChild(warning);
+passwordInput.addEventListener("keyup",(e)=>{
 
-password.addEventListener("keyup",e=>{
-
-warning.style.display=
+capsWarning.style.display =
 e.getModifierState("CapsLock")
-?"block":"none";
-
-});
-
-// Login Attempts
-
-let attempts=0;
-
-document.getElementById("loginForm")
-.addEventListener("submit",()=>{
-
-attempts++;
-
-console.log("Login Attempt:",attempts);
-
-});
-
-// Enter Key
-
-document.addEventListener("keydown",e=>{
-
-if(e.key==="Enter"){
-
-document.getElementById("loginForm")
-.requestSubmit();
-
-}
+? "block"
+: "none";
 
 });
 
 // Version
 
-const version=document.createElement("div");
+const version = document.createElement("div");
 
-version.style.textAlign="center";
+version.innerHTML = "Version 1.0.0";
 
-version.style.marginTop="15px";
+version.style.textAlign = "center";
+version.style.marginTop = "15px";
+version.style.fontSize = "12px";
+version.style.color = "#888";
 
-version.style.fontSize="12px";
-
-version.style.color="#999";
-
-version.innerHTML="Version 1.0.0";
-
-document.querySelector(".login-box")
-.appendChild(version);
+document.querySelector(".footer").appendChild(version);
 
 </script>
+    
 </body>
 </html>
+
