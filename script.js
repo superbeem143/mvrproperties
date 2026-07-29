@@ -82,9 +82,41 @@ window.onclick = (e) => {
 };
 
 publishBtn.onclick = async () => {
+let imageUrl = "";
 
+if (image.files.length > 0) {
+
+  const formData = new FormData();
+
+  formData.append("file", image.files[0]);
+  formData.append("upload_preset", "mvrproperties");
+
+  const res = await fetch(
+    "https://api.cloudinary.com/v1_1/onrnn2hn/image/upload",
+    {
+      method: "POST",
+      body: formData
+    }
+  );
+
+  const data = await res.json();
+
+  imageUrl = data.secure_url;
+
+}
   try {
+await addDoc(collection(db, "properties"), {
 
+  title: title.value,
+  price: price.value,
+  location: location.value,
+  layout: layout.value,
+  phone: phone.value,
+  description: description.value,
+  image: imageUrl,
+  createdAt: serverTimestamp()
+
+});
     await addDoc(collection(db, "properties"), {
 
       title: title.value,
@@ -93,7 +125,7 @@ publishBtn.onclick = async () => {
       layout: layout.value,
       phone: phone.value,
       description: description.value,
-      image: "",
+      image: imageUrl,
       createdAt: serverTimestamp()
 
     });
