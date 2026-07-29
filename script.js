@@ -139,14 +139,14 @@ if (publishBtn) {
 
     } catch (err) {
 
-      console.error(err);
-      alert("Publish failed: " + err.message);
+  console.error(err);
+
+  alert(
+    "Code: " + err.code +
+    "\nMessage: " + err.message
+  );
 
     }
-
-  });
-
-}
 
 // ==========================
 // SEARCH
