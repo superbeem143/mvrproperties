@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MVR Properties - Admin Login</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+body{
+margin:0;
+padding:0;
+font-family:Arial,sans-serif;
+background:linear-gradient(135deg,#0f172a,#1e3a8a);
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.login-box{
+
+width:380px;
+background:white;
+padding:35px;
+border-radius:15px;
+box-shadow:0 15px 40px rgba(0,0,0,.25);
+
+}
+
+.logo{
+
+text-align:center;
+font-size:32px;
+font-weight:bold;
+color:#1e40af;
+margin-bottom:10px;
+
+}
+
+.subtitle{
+
+text-align:center;
+color:#555;
+margin-bottom:25px;
+
+}
+
+.input-group{
+
+margin-bottom:18px;
+
+}
+
+.input-group label{
+
+display:block;
+font-weight:bold;
+margin-bottom:6px;
+
+}
+
+.input-group input{
+
+width:100%;
+padding:12px;
+border:1px solid #ccc;
+border-radius:8px;
+font-size:16px;
+
+}
+
+.options{
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+font-size:14px;
+margin-bottom:20px;
+
+}
+
+.options a{
+
+text-decoration:none;
+color:#1e40af;
+
+}
+
+button{
+
+width:100%;
+padding:14px;
+border:none;
+background:#2563eb;
+color:white;
+font-size:17px;
+border-radius:8px;
+cursor:pointer;
+
+}
+
+button:hover{
+
+background:#1d4ed8;
+
+}
+
+.footer{
+
+text-align:center;
+margin-top:20px;
+font-size:13px;
+color:#777;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="login-box">
+
+<div class="logo">
+🏠 MVR Properties
+</div>
+
+<div class="subtitle">
+Admin Login
+</div>
+
+<form id="loginForm">
+
+<div class="input-group">
+
+<label>Email</label>
+
+<input
+type="email"
+id="email"
+placeholder="Enter Email"
+required>
+
+</div>
+
+<div class="input-group">
+
+<label>Password</label>
+
+<input
+type="password"
+id="password"
+placeholder="Enter Password"
+required>
+
+</div>
+
+<div class="options">
+
+<label>
+
+<input type="checkbox">
+
+Remember Me
+
+</label>
+
+<a href="#">
+Forgot Password?
+
+</a>
+
+</div>
+
+<button type="submit">
+
+Login
+
+</button>
+
+</form>
+
+<div class="footer">
+
+© 2026 MVR Properties
+
+</div>
+
+</div>
+<!-- Loading -->
+<div id="loadingOverlay" class="loading-overlay" style="display:none;">
+    <div class="loader"></div>
+    <p>Signing in...</p>
+</div>
+
+<!-- Message -->
+<div id="messageBox" class="message-box" style="display:none;"></div>
+
+<style>
+
+/* Password Container */
+.password-box{
+    position:relative;
+}
+
+.password-box input{
+    width:100%;
+    padding-right:45px;
+}
+
+.toggle-password{
+    position:absolute;
+    right:15px;
+    top:50%;
+    transform:translateY(-50%);
+    cursor:pointer;
+    user-select:none;
+    font-size:18px;
+}
+
+/* Loading */
+.loading-overlay{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,.6);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    color:#fff;
+    z-index:9999;
+}
+
+.loader{
+    width:50px;
+    height:50px;
+    border:5px solid #fff;
+    border-top:5px solid #2563eb;
+    border-radius:50%;
+    animation:spin 1s linear infinite;
+    margin-bottom:15px;
+}
+
+@keyframes spin{
+    100%{
+        transform:rotate(360deg);
+    }
+}
+
+/* Message */
+.message-box{
+    position:fixed;
+    top:20px;
+    right:20px;
+    padding:15px 20px;
+    border-radius:8px;
+    color:#fff;
+    font-weight:bold;
+    z-index:9999;
+}
+
+.success{
+    background:#16a34a;
+}
+
+.error{
+    background:#dc2626;
+}
+
+/* Mobile */
+@media(max-width:480px){
+
+.login-box{
+    width:92%;
+    padding:25px;
+}
+
+.logo{
+    font-size:28px;
+}
+
+button{
+    font-size:16px;
+}
+
+}
+
+</style>
+
+<script>
+
+// Show / Hide Password
+
+const passwordInput=document.getElementById("password");
+
+const wrapper=passwordInput.parentElement;
+
+wrapper.classList.add("password-box");
+
+const eye=document.createElement("span");
+
+eye.className="toggle-password";
+
+eye.innerHTML="👁️";
+
+wrapper.appendChild(eye);
+
+eye.onclick=()=>{
+
+if(passwordInput.type==="password"){
+
+passwordInput.type="text";
+
+eye.innerHTML="🙈";
+
+}else{
+
+passwordInput.type="password";
+
+eye.innerHTML="👁️";
+
+}
+
+};
+
+</script>
+<script type="module" src="login.js"></script>
+<script>
+
+// Theme Toggle
+const themeBtn = document.createElement("button");
+themeBtn.innerHTML = "🌙";
+themeBtn.style.position = "fixed";
+themeBtn.style.top = "20px";
+themeBtn.style.right = "20px";
+themeBtn.style.width = "45px";
+themeBtn.style.height = "45px";
+themeBtn.style.borderRadius = "50%";
+themeBtn.style.border = "none";
+themeBtn.style.cursor = "pointer";
+themeBtn.style.fontSize = "18px";
+
+document.body.appendChild(themeBtn);
+
+let dark = true;
+
+themeBtn.onclick = () => {
+
+dark = !dark;
+
+if(dark){
+
+document.body.style.background =
+"linear-gradient(135deg,#0f172a,#1e3a8a)";
+
+themeBtn.innerHTML="🌙";
+
+}else{
+
+document.body.style.background =
+"#f5f5f5";
+
+themeBtn.innerHTML="☀️";
+
+}
+
+};
+
+// Caps Lock Warning
+
+const password=document.getElementById("password");
+
+const warning=document.createElement("small");
+
+warning.style.color="red";
+
+warning.style.display="none";
+
+warning.innerHTML="Caps Lock is ON";
+
+password.parentElement.appendChild(warning);
+
+password.addEventListener("keyup",e=>{
+
+warning.style.display=
+e.getModifierState("CapsLock")
+?"block":"none";
+
+});
+
+// Login Attempts
+
+let attempts=0;
+
+document.getElementById("loginForm")
+.addEventListener("submit",()=>{
+
+attempts++;
+
+console.log("Login Attempt:",attempts);
+
+});
+
+// Enter Key
+
+document.addEventListener("keydown",e=>{
+
+if(e.key==="Enter"){
+
+document.getElementById("loginForm")
+.requestSubmit();
+
+}
+
+});
+
+// Version
+
+const version=document.createElement("div");
+
+version.style.textAlign="center";
+
+version.style.marginTop="15px";
+
+version.style.fontSize="12px";
+
+version.style.color="#999";
+
+version.innerHTML="Version 1.0.0";
+
+document.querySelector(".login-box")
+.appendChild(version);
+
+</script>
+</body>
+</html>
