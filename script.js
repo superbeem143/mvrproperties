@@ -27,7 +27,13 @@ const phone = document.getElementById("phone");
 const description = document.getElementById("description");
 const amenities = document.getElementById("amenities");
 const image = document.getElementById("image");
+let currentImageIndex = 0;
+let currentImages = [];
 
+const detailImage = document.getElementById("detailImage");
+const imageCounter = document.getElementById("imageCounter");
+const prevImage = document.getElementById("prevImage");
+const nextImage = document.getElementById("nextImage");
 let allProperties = [];
 async function loadProperties() {
 
@@ -96,23 +102,26 @@ window.onclick = (e) => {
 window.showDetails = function(id) {
 
   const property = allProperties.find(p => p.id === id);
-
   if (!property) return;
 
-  alert(
-`🏠 ${property.title}
+  currentImages = property.images || [];
+  currentImageIndex = 0;
 
-💰 Price: ₹${property.price}
+  detailImage.src = currentImages.length
+    ? currentImages[0]
+    : "https://via.placeholder.com/400x250";
 
-📍 Location: ${property.location}
+  imageCounter.textContent =
+    `${currentImageIndex + 1} / ${currentImages.length || 1}`;
 
-🏘 Layout: ${property.layout}
+  document.getElementById("detailTitle").textContent = property.title;
+  document.getElementById("detailPrice").textContent = "₹" + property.price;
+  document.getElementById("detailLocation").textContent = "📍 " + property.location;
+  document.getElementById("detailLayout").textContent = "🏘 " + (property.layout || "");
+  document.getElementById("detailDescription").textContent =
+    property.description || "";
 
-📞 Phone: ${property.phone}
-
-📝 ${property.description || ""}`
-  );
-
+  document.getElementById("detailsModal").style.display = "flex";
 };
 publishBtn.onclick = async () => {
 
@@ -177,7 +186,35 @@ publishBtn.onclick = async () => {
 };
 
 document.addEventListener("click", (e) => {
+prevImage.onclick = () => {
 
+  if (currentImages.length <= 1) return;
+
+  currentImageIndex--;
+
+  if (currentImageIndex < 0) {
+    currentImageIndex = currentImages.length - 1;
+  }
+
+  detailImage.src = currentImages[currentImageIndex];
+  imageCounter.textContent =
+    `${currentImageIndex + 1} / ${currentImages.length}`;
+};
+
+nextImage.onclick = () => {
+
+  if (currentImages.length <= 1) return;
+
+  currentImageIndex++;
+
+  if (currentImageIndex >= currentImages.length) {
+    currentImageIndex = 0;
+  }
+
+  detailImage.src = currentImages[currentImageIndex];
+  imageCounter.textContent =
+    `${currentImageIndex + 1} / ${currentImages.length}`;
+};
   if (e.target.classList.contains("gallery-thumb")) {
 
     document.getElementById("detailImage").src = e.target.src;
