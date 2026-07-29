@@ -1,15 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MVR Properties | Buy • Sell • Rent</title>
 
-<title>MVR Properties | Luxury Real Estate</title>
+  <meta name="description"
+    content="Buy, Sell and Rent Properties with MVR Properties. Verified Plots, Villas, Apartments and Farm Lands.">
 
-<link rel="stylesheet" href="style.css">
+  <meta name="keywords"
+    content="MVR Properties, Real Estate, Plots, Villas, Apartments, Farm Land">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#b8860b">
+
+  <link rel="stylesheet" href="style.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 </head>
 
@@ -18,10 +34,14 @@
 <header class="header">
 
 <div class="logo">
-🏡 <span>MVR</span> Properties
+
+<i class="fa-solid fa-house"></i>
+
+<span>MVR</span> Properties
+
 </div>
 
-<nav>
+<nav class="navbar">
 
 <a href="#">Home</a>
 
@@ -33,22 +53,44 @@
 
 </nav>
 
-<button id="addPropertyBtn" class="gold-btn">
-+ Add Property
+<div class="header-buttons">
+
+<button id="loginBtn" class="outline-btn">
+
+<i class="fa-solid fa-user"></i>
+
+Login
+
 </button>
+
+<button id="addPropertyBtn" class="gold-btn">
+
+<i class="fa-solid fa-plus"></i>
+
+Add Property
+
+</button>
+
+</div>
 
 </header>
 
 <section class="hero">
 
+<div class="hero-overlay"></div>
+
 <div class="hero-content">
 
 <h1>
+
 Find Your Dream Property
+
 </h1>
 
 <p>
-Premium Plots • Villas • Apartments • Farm Lands
+
+Verified Plots • Villas • Apartments • Farm Lands
+
 </p>
 
 <div class="search-box">
@@ -56,22 +98,38 @@ Premium Plots • Villas • Apartments • Farm Lands
 <input
 type="text"
 id="searchInput"
-placeholder="Search by city, layout, property type...">
+placeholder="Search by City, Layout, Area...">
 
-<button class="gold-btn">
+<button id="searchBtn" class="gold-btn">
+
+<i class="fa-solid fa-magnifying-glass"></i>
+
 Search
+
 </button>
 
 </div>
 
-<div class="hero-buttons">
+<div class="hero-actions">
 
 <a href="#featured" class="gold-btn">
+
 Browse Properties
+
 </a>
 
 <a href="tel:8639496081" class="outline-btn">
-📞 Call Now
+
+<i class="fa-solid fa-phone"></i>
+
+Call Now
+
+</a>
+
+<a href="#" id="superBeemAI" class="ai-btn">
+
+🤖 SUPER BEEM AI
+
 </a>
 
 </div>
@@ -79,6 +137,54 @@ Browse Properties
 </div>
 
 </section>
+<!-- ===========================
+PROPERTY CATEGORIES
+=========================== -->
+
+<section class="categories">
+
+<h2 class="section-title">Browse by Category</h2>
+
+<div class="category-grid">
+
+<div class="category-card">
+<i class="fa-solid fa-map-location-dot"></i>
+<h3>Open Plots</h3>
+<p>Verified Layouts</p>
+</div>
+
+<div class="category-card">
+<i class="fa-solid fa-house"></i>
+<h3>Independent Houses</h3>
+<p>Ready To Move</p>
+</div>
+
+<div class="category-card">
+<i class="fa-solid fa-building"></i>
+<h3>Apartments</h3>
+<p>Luxury & Budget</p>
+</div>
+
+<div class="category-card">
+<i class="fa-solid fa-tree"></i>
+<h3>Farm Lands</h3>
+<p>Agricultural Properties</p>
+</div>
+
+<div class="category-card">
+<i class="fa-solid fa-shop"></i>
+<h3>Commercial</h3>
+<p>Shops & Offices</p>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ===========================
+STATS
+=========================== -->
 
 <section class="stats">
 
@@ -104,193 +210,235 @@ Browse Properties
 
 </section>
 
+
+<!-- ===========================
+FEATURED PROPERTIES
+=========================== -->
+
 <section id="featured" class="section">
 
-<h2>⭐ Featured Properties</h2>
+<h2 class="section-title">
+⭐ Featured Properties
+</h2>
 
 <div id="propertyList" class="property-grid">
 
-<!-- Properties load here -->
+<!-- Property Card -->
+
+<div class="property-card">
+
+<div class="property-image">
+
+<img src="images/sample-property.jpg" alt="Property">
+
+<span class="featured-badge">
+Featured
+</span>
 
 </div>
 
-</section>
-<section id="latest" class="section">
+<div class="property-content">
 
-<h2>🏘 Latest Properties</h2>
+<h3>Premium Open Plot</h3>
 
-<div class="filter-bar">
-
-<select id="propertyType">
-
-<option value="">All Types</option>
-<option>Open Plot</option>
-<option>House</option>
-<option>Apartment</option>
-<option>Commercial</option>
-<option>Farm Land</option>
-
-</select>
-
-<select id="sortBy">
-
-<option value="latest">Latest First</option>
-<option value="low">Price: Low to High</option>
-<option value="high">Price: High to Low</option>
-
-</select>
-
-</div>
-
-<div id="latestProperties" class="property-grid">
-
-<!-- Latest properties load here -->
-
-</div>
-
-</section>
-<!-- View Details Popup -->
-
-<div id="detailsModal" class="modal">
-
-<div class="modal-content details-box">
-
-<span id="closeDetails" class="close">&times;</span>
-
-<div id="detailsSlider" class="slider-container">
-
-<button id="prevImage" class="slider-btn">◀</button>
-
-<img id="detailImage" src="" alt="Property" class="detail-image">
-
-<button id="nextImage" class="slider-btn">▶</button>
-
-</div>
-
-<p id="imageCounter" style="text-align:center;font-weight:bold;margin-top:10px;">
-1 / 1
+<p>
+📍 Palakollu, Andhra Pradesh
 </p>
 
-<h2 id="detailTitle"></h2>
+<h2>₹12,50,000</h2>
 
-<h3 id="detailPrice"></h3>
+<div class="property-buttons">
 
-<p id="detailLocation"></p>
-
-<p id="detailLayout"></p>
-
-<p id="detailDescription"></p>
-
-<div class="detail-buttons">
-
-<a id="callBtn" class="gold-btn" href="#">
-📞 Call
-</a>
-
-<a id="whatsappBtn" class="gold-btn" target="_blank">
-💬 WhatsApp
-</a>
-
-<a id="mapBtn" class="gold-btn" target="_blank">
-📍 Maps
-</a>
-
-<button id="shareBtn" class="gold-btn">
-🔗 Share
+<button class="gold-btn">
+View Details
 </button>
 
-</div>
-
-</div>
-
-</div>
-<!-- Add Property Popup -->
+<a href="tel:8639496081" class="
+<!-- ===========================
+PROPERTY DETAILS MODAL
+=========================== -->
 
 <div id="propertyModal" class="modal">
 
 <div class="modal-content">
 
-<span id="closeModal" class="close">&times;</span>
+<span class="close-modal">&times;</span>
 
-<h2>Add New Property</h2>
+<div class="modal-slider">
 
-<input type="text" id="title" placeholder="Property Title">
+<button class="slider-btn prev">
+❮
+</button>
 
-<input type="number" id="price" placeholder="Price">
+<img id="modalImage"
+src=""
+alt="Property Image">
 
-<select id="propertyTypeInput">
-<option>Open Plot</option>
-<option>House</option>
-<option>Apartment</option>
-<option>Commercial</option>
-<option>Farm Land</option>
-</select>
-
-<input type="text" id="location" placeholder="Location">
-
-<input type="text" id="layout" placeholder="Layout Name">
-
-<input type="text" id="area" placeholder="Area (Sq.Yards / Acres)">
-
-<select id="facing">
-<option>East</option>
-<option>West</option>
-<option>North</option>
-<option>South</option>
-</select>
-
-<input type="text" id="maps" placeholder="Google Maps Link">
-
-<input type="text" id="phone" value="8639496081">
-
-<textarea id="description" placeholder="Property Description"></textarea>
-
-<textarea id="amenities" placeholder="Amenities"></textarea>
-
-<input type="file" id="image" accept="image/*" multiple>
-
-<button id="publishBtn" class="gold-btn">
-Publish Property
+<button class="slider-btn next">
+❯
 </button>
 
 </div>
 
-</div>
-<!-- Contact Section -->
+<div class="modal-body">
 
-<section id="contact" class="section">
+<h2 id="modalTitle">
+Property Name
+</h2>
 
-<h2>📞 Contact Us</h2>
+<h3 id="modalPrice">
+₹0
+</h3>
 
-<p>
-MVR Properties <br>
-Phone: +91 8639496081
+<p id="modalLocation">
+Location
 </p>
 
-<a href="tel:8639496081" class="gold-btn">
-📞 Call Now
+<p id="modalDescription">
+Description
+</p>
+
+<div class="modal-buttons">
+
+<a id="callBtn"
+href="#"
+class="gold-btn">
+
+📞 Call
+
 </a>
 
-<a href="https://wa.me/918639496081" class="gold-btn" target="_blank">
+<a id="whatsappBtn"
+href="#"
+target="_blank"
+class="outline-btn">
+
 💬 WhatsApp
+
 </a>
 
-</section>
+<a id="mapBtn"
+href="#"
+target="_blank"
+class="gold-btn">
 
-<footer>
+📍 Google Maps
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- FLOATING BUTTONS -->
+
+<a href="https://wa.me/918639496081"
+class="floating-whatsapp"
+target="_blank">
+
+<i class="fab fa-whatsapp"></i>
+
+</a>
+
+<a href="tel:8639496081"
+class="floating-call">
+
+<i class="fa-solid fa-phone"></i>
+
+</a>
+
+<button id="floatingAI"
+class="floating-ai">
+
+🤖
+
+</button>
+
+
+<!-- FOOTER -->
+
+<footer id="contact">
+
+<div class="footer-container">
+
+<div>
+
+<h2>MVR Properties</h2>
 
 <p>
-© 2026 MVR Properties. All Rights Reserved.
+
+Buy • Sell • Rent
+
+</p>
+
+<p>
+
+Verified Real Estate Platform
+
+</p>
+
+</div>
+
+<div>
+
+<h3>Quick Links</h3>
+
+<a href="#">Home</a><br>
+
+<a href="#featured">Featured</a><br>
+
+<a href="#latest">Latest</a>
+
+</div>
+
+<div>
+
+<h3>Contact</h3>
+
+<p>
+
+📞 +91 8639496081
+
+</p>
+
+<p>
+
+📧 mvrproperties@gmail.com
+
+</p>
+
+<p>
+
+📍 Andhra Pradesh
+
+</p>
+
+</div>
+
+</div>
+
+<hr>
+
+<p class="copyright">
+
+© 2026 MVR Properties.
+
+All Rights Reserved.
+
 </p>
 
 </footer>
 
-<script type="module" src="firebase.js"></script>
 
-<script type="module" src="script.js"></script>
+<script src="firebase.js"></script>
+
+<script src="script.js"></script>
 
 </body>
 
 </html>    
-    
-
