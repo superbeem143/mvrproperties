@@ -1,87 +1,60 @@
-// ==========================
-// IMPORTS
-// ==========================
-
 import { db } from "./firebase.js";
-alert("script.js loaded");
+
 import {
   collection,
   addDoc,
-  getDocs
+  getDocs,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
-// ==========================
-// POPUP
-// ==========================
+const propertyList = document.getElementById("propertyList");
 
-const popup = document.getElementById("popup");
+const addPropertyBtn = document.getElementById("addPropertyBtn");
+const propertyModal = document.getElementById("propertyModal");
+const closeModal = document.getElementById("closeModal");
 
-window.openPopup = function () {
-  if (popup) popup.style.display = "flex";
-};
+const publishBtn = document.getElementById("publishBtn");
 
-window.closePopup = function () {
-  if (popup) popup.style.display = "none";
-};
+const searchInput = document.getElementById("searchInput");
 
-window.onclick = function (e) {
-  if (e.target === popup) {
-    closePopup();
-  }
-};
-
-// ==========================
-// MOBILE MENU
-// ==========================
-
-const menuBtn = document.getElementById("menuBtn");
-const navbar = document.getElementById("navbar");
-
-if (menuBtn && navbar) {
-  menuBtn.addEventListener("click", () => {
-    if (navbar.style.display === "flex") {
-      navbar.style.display = "none";
-    } else {
-      navbar.style.display = "flex";
-      navbar.style.flexDirection = "column";
-    }
-  });
-}
-
-// ==========================
-// LOAD PROPERTIES
-// ==========================
-
+const title = document.getElementById("title");
+const price = document.getElementById("price");
+const location = document.getElementById("location");
+const layout = document.getElementById("layout");
+const phone = document.getElementById("phone");
+const description = document.getElementById("description");
+const image = document.getElementById("image");
+  
 async function loadProperties() {
 
-  const container = document.getElementById("propertyContainer");
-
-  if (!container) return;
-
-  container.innerHTML = "";
+  propertyList.innerHTML = "";
 
   const snapshot = await getDocs(collection(db, "properties"));
 
   snapshot.forEach((doc) => {
 
-    const p = doc.data();
+    const data = doc.data();
 
-    container.innerHTML += `
+    propertyList.innerHTML += `
       <div class="property-card">
 
-        <img src="${p.image || 'https://via.placeholder.com/600x400'}" alt="Property">
+        <img src="${data.image || 'https://via.placeholder.com/400x250?text=Property'}">
 
-        <div class="property-content">
+        <div class="property-info">
 
-          <h3>${p.title}</h3>
+          <h3>${data.title}</h3>
 
-          <p><b>Type:</b> ${p.type}</p>
+          <p><strong>💰 Price:</strong> ₹${data.price}</p>
 
-          <p><b>Location:</b> ${p.location}</p>
+          <p><strong>📍 Location:</strong> ${data.location}</p>
 
-          <div class="price">
-            ₹${p.price}
-          </div>
+          <p><strong>🏘 Layout:</strong> ${data.layout}</p>
+
+          <p><strong>📞 Phone:</strong> ${data.phone}</p>
+
+          <button class="gold-btn">
+            View Details
+          </button>
 
         </div>
 
@@ -93,117 +66,69 @@ async function loadProperties() {
 }
 
 loadProperties();
-// ==========================
-// PUBLISH PROPERTY
-// ==========================
 
-const publishBtn = document.getElementById("publishBtn");
+addPropertyBtn.onclick = () => {
+  propertyModal.style.display = "flex";
+};
 
-if (publishBtn) {
+closeModal.onclick = () => {
+  propertyModal.style.display = "none";
+};
 
-  publishBtn.addEventListener("click", async () => {
+window.onclick = (e) => {
+  if (e.target === propertyModal) {
+    propertyModal.style.display = "none";
+  }
+};
 
-    try {
+publishBtn.onclick = async () => {
 
-      const title = document.getElementById("title").value.trim();
-      const layout = document.getElementById("layout").value.trim();
-      const type = document.getElementById("type").value;
-      const price = document.getElementById("price").value;
-      const sqyard = document.getElementById("sqyard").value;
-      const locationValue = document.getElementById("location").value.trim();
-      const maps = document.getElementById("maps").value.trim();
-      const description = document.getElementById("description").value.trim();
+  try {
 
-      if (!title || !type || !price || !locationValue) {
-        alert("Please fill all required fields.");
-        return;
-      }
+    await addDoc(collection(db, "properties"), {
 
-      await addDoc(collection(db, "properties"), {
-        title,
-        layout,
-        type,
-        price,
-        sqyard,
-        location: locationValue,
-        maps,
-        description,
-        image: ""
-      });
-
-      alert("Property published successfully!");
-
-      closePopup();
-
-      window.location.reload();
-
-    } catch (err) {
-
-  console.error(err);
-
-  alert(
-    "Code: " + err.code +
-    "\nMessage: " + err.message
-  );
-
-    }
-
-// ==========================
-// SEARCH
-// ==========================
-
-const searchBtn = document.getElementById("searchBtn");
-
-if (searchBtn) {
-
-  searchBtn.addEventListener("click", () => {
-
-    const keyword = document
-      .getElementById("searchLocation")
-      .value
-      .toLowerCase();
-
-    const cards = document.querySelectorAll(".property-card");
-
-    cards.forEach(card => {
-
-      if (card.innerText.toLowerCase().includes(keyword)) {
-        card.style.display = "";
-      } else {
-        card.style.display = "none";
-      }
+      title: title.value,
+      price: price.value,
+      location: location.value,
+      layout: layout.value,
+      phone: phone.value,
+      description: description.value,
+      image: "",
+      createdAt: serverTimestamp()
 
     });
 
+    alert("✅ Property Published Successfully!");
+
+    propertyModal.style.display = "none";
+
+    loadProperties();
+
+  } catch (err) {
+
+    console.error(err);
+
+    alert("❌ " + err.message);
+
+  }
+
+};
+
+
+searchInput.addEventListener("input", () => {
+
+  const text = searchInput.value.toLowerCase();
+
+  document.querySelectorAll(".property-card").forEach(card => {
+
+    if (card.innerText.toLowerCase().includes(text)) {
+      card.style.display = "block";
+    } else {
+      card.style.display = "none";
+    }
+
   });
 
-}
+});
 
-// ==========================
-// PREVIEW
-// ==========================
-
-const previewBtn = document.getElementById("previewBtn");
-
-if (previewBtn) {
-
-  previewBtn.addEventListener("click", () => {
-
-    alert(
-`Preview
-
-Title: ${document.getElementById("title").value}
-Type: ${document.getElementById("type").value}
-Location: ${document.getElementById("location").value}
-Price: ₹${document.getElementById("price").value}`
-    );
-
-  });
-
-}
-
-        
-
-
-     
-  
+console.log("✅ MVR Properties Luxury Edition Loaded");
