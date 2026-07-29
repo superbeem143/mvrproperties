@@ -1,8 +1,6 @@
-// Firebase App
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
-// Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyBFSnAwXw6uJB1QZjqT1IHlYBwsS9CsvLw",
   authDomain: "mvr-properties-64922.firebaseapp.com",
@@ -13,14 +11,7 @@ const firebaseConfig = {
   measurementId: "G-VMK0P03VQX"
 };
 
-// Initialize
 const app = initializeApp(firebaseConfig);
-
-import { getStorage } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-storage.js";
-import { getStorage } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-storage.js";
-
 const db = getFirestore(app);
-const storage = getStorage(app);
 
-export { db, storage };
-
+export { db };
