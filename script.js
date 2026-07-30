@@ -1,542 +1,264 @@
 /*=====================================
 MVR PROPERTIES
-script.js - Part 1
+script.js (module)
+Updated to use modular firebase functions and avoid console errors
 =====================================*/
+
+import { getProperties } from './firebase.js';
 
 // =============================
 // Global Variables
 // =============================
 
-const propertyList = document.getElementById("propertyList");
-const latestProperties = document.getElementById("latestProperties");
+const propertyList = document.getElementById('propertyList');
+const latestProperties = document.getElementById('latestProperties'); // may be null on some pages
 
-const searchInput = document.getElementById("searchInput");
-const searchBtn = document.getElementById("searchBtn");
+const searchInput = document.getElementById('searchInput');
+const searchBtn = document.getElementById('searchBtn');
 
-const propertyModal = document.getElementById("propertyModal");
-const closeModal = document.querySelector(".close-modal");
+const propertyModal = document.getElementById('propertyModal');
+const closeModal = document.querySelector('.close-modal');
 
-const modalImage = document.getElementById("modalImage");
-const modalTitle = document.getElementById("modalTitle");
-const modalPrice = document.getElementById("modalPrice");
-const modalLocation = document.getElementById("modalLocation");
-const modalDescription = document.getElementById("modalDescription");
+const modalImage = document.getElementById('modalImage');
+const modalTitle = document.getElementById('modalTitle');
+const modalPrice = document.getElementById('modalPrice');
+const modalLocation = document.getElementById('modalLocation');
+const modalDescription = document.getElementById('modalDescription');
 
-const callBtn = document.getElementById("callBtn");
-const whatsappBtn = document.getElementById("whatsappBtn");
-const mapBtn = document.getElementById("mapBtn");
+const callBtn = document.getElementById('callBtn');
+const whatsappBtn = document.getElementById('whatsappBtn');
+const mapBtn = document.getElementById('mapBtn');
 
 // =============================
 // Local Storage
 // =============================
 
 let properties = [];
-
 let filteredProperties = [];
-
 let currentProperty = null;
-
-// =============================
-// Initial Load
-// =============================
-
-window.addEventListener("load", () => {
-
-loadProperties();
-
-});
 
 // =============================
 // Search
 // =============================
 
-searchBtn.addEventListener("click", searchProperties);
-
-searchInput.addEventListener("keyup", e=>{
-
-if(e.key==="Enter"){
-
-searchProperties();
-
+if (searchBtn) searchBtn.addEventListener('click', searchProperties);
+if (searchInput) {
+  searchInput.addEventListener('keyup', (e) => {
+    if (e.key === 'Enter') searchProperties();
+  });
 }
 
-});
-
-function searchProperties(){
-
-const keyword = searchInput.value
-.toLowerCase()
-.trim();
-
-if(keyword===""){
-
-renderProperties(properties);
-
-return;
-
-}
-
-filteredProperties = properties.filter(property=>{
-
-return(
-
-property.title.toLowerCase().includes(keyword)
-
-||
-
-property.location.toLowerCase().includes(keyword)
-
-||
-
-property.type.toLowerCase().includes(keyword)
-
-);
-
-});
-
-renderProperties(filteredProperties);
-
+function searchProperties() {
+  const keyword = (searchInput?.value || '').toLowerCase().trim();
+  if (keyword === '') {
+    renderProperties(properties);
+    return;
+  }
+  filteredProperties = properties.filter(property => {
+    return (
+      (property.title || '').toLowerCase().includes(keyword) ||
+      (property.location || '').toLowerCase().includes(keyword) ||
+      (property.type || '').toLowerCase().includes(keyword)
+    );
+  });
+  renderProperties(filteredProperties);
 }
 
 // =============================
 // Render Properties
 // =============================
 
-function renderProperties(list){
+function renderProperties(list) {
+  if (!propertyList) return;
+  propertyList.innerHTML = '';
+  if (latestProperties) latestProperties.innerHTML = '';
 
-propertyList.innerHTML="";
-
-latestProperties.innerHTML="";
-
-list.forEach(property=>{
-
-const card=createPropertyCard(property);
-
-propertyList.appendChild(card);
-
-latestProperties.appendChild(card.cloneNode(true));
-
-});
-
+  list.forEach(property => {
+    const card = createPropertyCard(property);
+    propertyList.appendChild(card);
+    if (latestProperties) latestProperties.appendChild(card.cloneNode(true));
+  });
 }
 
 // =============================
 // Create Card
 // =============================
 
-function createPropertyCard(property){
+function createPropertyCard(property) {
+  const card = document.createElement('div');
+  card.className = 'property-card';
 
-const card=document.createElement("div");
+  const imageWrap = document.createElement('div');
+  imageWrap.className = 'property-image';
+  const img = document.createElement('img');
+  img.src = property.images?.[0] || 'images/sample-property.jpg';
+  img.alt = property.title || 'Property';
+  img.loading = 'lazy';
+  imageWrap.appendChild(img);
 
-card.className="property-card";
+  const badge = document.createElement('span');
+  badge.className = 'featured-badge';
+  badge.textContent = property.featured ? 'Featured' : 'Property';
+  imageWrap.appendChild(badge);
 
-card.innerHTML=`
+  const content = document.createElement('div');
+  content.className = 'property-content';
+  const h3 = document.createElement('h3');
+  h3.textContent = property.title || '';
+  const pLoc = document.createElement('p');
+  pLoc.textContent = `📍 ${property.location || ''}`;
+  const h2 = document.createElement('h2');
+  h2.textContent = `₹ ${property.price || ''}`;
+  const btnWrap = document.createElement('div');
+  btnWrap.className = 'property-buttons';
 
-<div class="property-image">
+  const viewBtn = document.createElement('button');
+  viewBtn.className = 'gold-btn viewBtn';
+  viewBtn.type = 'button';
+  viewBtn.textContent = 'View Details';
+  viewBtn.addEventListener('click', () => openModal(property));
 
-<img src="${property.images[0]}" alt="Property">
+  const callA = document.createElement('a');
+  callA.href = `tel:${property.phone || ''}`;
+  callA.className = 'outline-btn';
+  callA.textContent = 'Call';
 
-<span class="featured-badge">
+  btnWrap.appendChild(viewBtn);
+  btnWrap.appendChild(callA);
 
-${property.featured ? "Featured" : "Property"}
+  content.appendChild(h3);
+  content.appendChild(pLoc);
+  content.appendChild(h2);
+  content.appendChild(btnWrap);
 
-</span>
+  card.appendChild(imageWrap);
+  card.appendChild(content);
 
-</div>
-
-<div class="property-content">
-
-<h3>${property.title}</h3>
-
-<p>📍 ${property.location}</p>
-
-<h2>₹ ${property.price}</h2>
-
-<div class="property-buttons">
-
-<button class="gold-btn viewBtn">
-
-View Details
-
-</button>
-
-<a href="tel:${property.phone}"
-
-class="outline-btn">
-
-Call
-
-</a>
-
-</div>
-
-</div>
-
-`;
-
-card.querySelector(".viewBtn")
-.addEventListener("click",()=>{
-
-openModal(property);
-
-});
-
-return card;
-
-  }
-/*=====================================
-PROPERTY DETAILS MODAL
-script.js - Part 2
-=====================================*/
+  return card;
+}
 
 // =============================
 // Open Modal
 // =============================
 
-function openModal(property){
+function openModal(property) {
+  currentProperty = property;
+  if (modalImage) modalImage.src = property.images?.[0] || '';
+  if (modalTitle) modalTitle.textContent = property.title || '';
+  if (modalPrice) modalPrice.textContent = `₹ ${property.price || ''}`;
+  if (modalLocation) modalLocation.textContent = property.location || '';
+  if (modalDescription) modalDescription.textContent = property.description || '';
 
-currentProperty = property;
+  if (callBtn) callBtn.href = `tel:${property.phone || ''}`;
+  if (whatsappBtn) whatsappBtn.href = `https://wa.me/${property.phone || ''}?text=${encodeURIComponent('Hi, I am interested in ' + (property.title || ''))}`;
+  if (mapBtn) mapBtn.href = property.map || '';
 
-modalImage.src = property.images[0];
-
-modalTitle.textContent = property.title;
-
-modalPrice.textContent = "₹ " + property.price;
-
-modalLocation.textContent = property.location;
-
-modalDescription.textContent = property.description;
-
-// Contact Buttons
-
-callBtn.href = "tel:" + property.phone;
-
-whatsappBtn.href =
-`https://wa.me/${property.phone}?text=Hi, I am interested in ${encodeURIComponent(property.title)}`;
-
-mapBtn.href = property.map;
-
-// Show Modal
-
-propertyModal.style.display = "flex";
-
-currentImage = 0;
-
+  if (propertyModal) propertyModal.style.display = 'flex';
+  currentImage = 0;
 }
 
 // =============================
-// Close Modal
+// Close Modal and controls
 // =============================
 
-closeModal.addEventListener("click",()=>{
-
-propertyModal.style.display="none";
-
-});
-
-window.addEventListener("click",(e)=>{
-
-if(e.target===propertyModal){
-
-propertyModal.style.display="none";
-
+if (closeModal) {
+  closeModal.addEventListener('click', () => { if (propertyModal) propertyModal.style.display = 'none'; });
 }
 
+window.addEventListener('click', (e) => {
+  if (e.target === propertyModal) { if (propertyModal) propertyModal.style.display = 'none'; }
 });
 
 // =============================
 // Image Slider
 // =============================
-
 let currentImage = 0;
+const nextBtn = document.querySelector('.next');
+const prevBtn = document.querySelector('.prev');
 
-const nextBtn = document.querySelector(".next");
-
-const prevBtn = document.querySelector(".prev");
-
-nextBtn.addEventListener("click",()=>{
-
-if(!currentProperty) return;
-
-currentImage++;
-
-if(currentImage >= currentProperty.images.length){
-
-currentImage = 0;
-
-}
-
-modalImage.src = currentProperty.images[currentImage];
-
+if (nextBtn) nextBtn.addEventListener('click', () => {
+  if (!currentProperty) return;
+  currentImage = (currentImage + 1) % (currentProperty.images?.length || 1);
+  if (modalImage) modalImage.src = currentProperty.images?.[currentImage] || '';
 });
-
-prevBtn.addEventListener("click",()=>{
-
-if(!currentProperty) return;
-
-currentImage--;
-
-if(currentImage < 0){
-
-currentImage = currentProperty.images.length - 1;
-
-}
-
-modalImage.src = currentProperty.images[currentImage];
-
+if (prevBtn) prevBtn.addEventListener('click', () => {
+  if (!currentProperty) return;
+  const len = (currentProperty.images?.length || 1);
+  currentImage = (currentImage - 1 + len) % len;
+  if (modalImage) modalImage.src = currentProperty.images?.[currentImage] || '';
 });
 
 // =============================
 // Share Property
 // =============================
-
-function shareProperty(){
-
-if(!currentProperty) return;
-
-if(navigator.share){
-
-navigator.share({
-
-title: currentProperty.title,
-
-text: currentProperty.description,
-
-url: window.location.href
-
-});
-
-}else{
-
-alert("Sharing is not supported on this device.");
-
-}
-
+function shareProperty() {
+  if (!currentProperty) return;
+  if (navigator.share) {
+    navigator.share({ title: currentProperty.title, text: currentProperty.description, url: window.location.href });
+  } else {
+    alert('Sharing is not supported on this device.');
+  }
 }
 
 // =============================
 // Favorites
 // =============================
-
-function toggleFavorite(id){
-
-let favs =
-JSON.parse(localStorage.getItem("favorites")) || [];
-
-if(favs.includes(id)){
-
-favs = favs.filter(item=>item!==id);
-
-}else{
-
-favs.push(id);
-
-}
-
-localStorage.setItem(
-"favorites",
-JSON.stringify(favs)
-);
-
+function toggleFavorite(id) {
+  const favs = JSON.parse(localStorage.getItem('favorites') || '[]');
+  const updated = favs.includes(id) ? favs.filter(item => item !== id) : [...favs, id];
+  localStorage.setItem('favorites', JSON.stringify(updated));
 }
 
 // =============================
 // Floating AI Button
 // =============================
+const aiButton = document.getElementById('floatingAI');
+if (aiButton) aiButton.addEventListener('click', () => alert('🤖 SUPER BEEM AI is coming soon!'));
 
-const aiButton =
-document.getElementById("floatingAI");
-
-if(aiButton){
-
-aiButton.addEventListener("click",()=>{
-
-alert(
-"🤖 SUPER BEEM AI is coming soon!"
-);
-
-});
-
+// =============================
+// Load Properties from Firestore (modular)
+// =============================
+async function loadProperties() {
+  try {
+    const docs = await getProperties();
+    properties = Array.isArray(docs) ? docs : [];
+    renderProperties(properties);
+  } catch (error) {
+    console.error('Property Loading Error:', error);
   }
-/*=====================================
-MVR PROPERTIES
-script.js - Part 3 (Final)
-=====================================*/
-
-// =============================
-// Firebase Property Loading
-// =============================
-
-async function loadProperties(){
-
-try{
-
-const snapshot = await db
-.collection("properties")
-.orderBy("createdAt","desc")
-.get();
-
-properties = [];
-
-snapshot.forEach(doc=>{
-
-properties.push({
-
-id:doc.id,
-
-...doc.data()
-
-});
-
-});
-
-renderProperties(properties);
-
-}catch(error){
-
-console.error("Property Loading Error:",error);
-
-}
-
 }
 
 // =============================
-// Login Button
+// Login & Navigation
 // =============================
-
-const loginBtn =
-document.getElementById("loginBtn");
-
-if(loginBtn){
-
-loginBtn.addEventListener("click",()=>{
-
-window.location.href="login.html";
-
-});
-
-}
+const loginBtn = document.getElementById('loginBtn');
+if (loginBtn) loginBtn.addEventListener('click', () => { window.location.href = 'login.html'; });
+const addPropertyBtn = document.getElementById('addPropertyBtn');
+if (addPropertyBtn) addPropertyBtn.addEventListener('click', () => { window.location.href = 'admin.html'; });
 
 // =============================
-// Add Property
+// Search while typing
 // =============================
-
-const addPropertyBtn =
-document.getElementById("addPropertyBtn");
-
-if(addPropertyBtn){
-
-addPropertyBtn.addEventListener("click",()=>{
-
-window.location.href="admin.html";
-
-});
-
-}
+if (searchInput) searchInput.addEventListener('input', () => { searchProperties(); });
 
 // =============================
-// SUPER BEEM AI
+// Escape key closes modal
 // =============================
-
-const aiLauncher =
-document.getElementById("superBeemAI");
-
-if(aiLauncher){
-
-aiLauncher.addEventListener("click",()=>{
-
-alert(
-`🤖 SUPER BEEM AI
-
-Coming Soon!
-
-Soon you can search like:
-
-• 30 Lakhs Open Plot
-• East Facing
-• Near School
-• Villa in Hyderabad
-• Farm Land Near Highway`
-);
-
-});
-
-}
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && propertyModal) propertyModal.style.display = 'none'; });
 
 // =============================
-// Floating AI Button
+// Scroll behavior
 // =============================
-
-const floatingAI =
-document.getElementById("floatingAI");
-
-if(floatingAI){
-
-floatingAI.addEventListener("click",()=>{
-
-aiLauncher?.click();
-
-});
-
-}
-
-// =============================
-// Search While Typing
-// =============================
-
-if(searchInput){
-
-searchInput.addEventListener("input",()=>{
-
-searchProperties();
-
-});
-
-}
-
-// =============================
-// Escape Key Closes Modal
-// =============================
-
-document.addEventListener("keydown",(e)=>{
-
-if(e.key==="Escape"){
-
-propertyModal.style.display="none";
-
-}
-
+window.addEventListener('scroll', () => {
+  const header = document.querySelector('.header');
+  if (!header) return;
+  header.classList.toggle('scrolled', window.scrollY > 60);
 });
 
 // =============================
-// Scroll To Top
+// Initialize on DOMContentLoaded
 // =============================
-
-window.addEventListener("scroll",()=>{
-
-const header =
-document.querySelector(".header");
-
-if(window.scrollY>60){
-
-header.classList.add("scrolled");
-
-}else{
-
-header.classList.remove("scrolled");
-
-}
-
-});
-
-// =============================
-// Initialize
-// =============================
-
-document.addEventListener("DOMContentLoaded",()=>{
-
-console.log("✅ MVR Properties Loaded");
-
-loadProperties();
-
+window.addEventListener('DOMContentLoaded', () => {
+  console.log('✅ MVR Properties Loaded');
+  loadProperties();
 });
