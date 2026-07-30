@@ -1,56 +1,59 @@
 /*=====================================
 MVR PROPERTIES
 firebase.js
-Part 1
+Restored image upload to use Firebase Storage so publishing works again.
+Do NOT change other exports or IDs. Keep Firestore & Auth logic intact.
 =====================================*/
 
 // Firebase SDK
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 
 import {
-getAuth,
-signInWithEmailAndPassword,
-signOut,
-onAuthStateChanged,
-sendPasswordResetEmail,
-setPersistence,
-browserLocalPersistence,
-browserSessionPersistence
+  getAuth,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  sendPasswordResetEmail,
+  setPersistence,
+  browserLocalPersistence,
+  browserSessionPersistence
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
 import {
-getFirestore,
-collection,
-addDoc,
-getDocs,
-updateDoc,
-deleteDoc,
-doc,
-getDoc,
-onSnapshot,
-query,
-orderBy,
-serverTimestamp
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  updateDoc,
+  deleteDoc,
+  doc,
+  getDoc,
+  onSnapshot,
+  query,
+  orderBy,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+// Storage (restored upload using Firebase Storage)
+import {
+  getStorage,
+  ref as storageRef,
+  uploadBytes,
+  uploadBytesResumable,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-storage.js";
 
 // =====================================
 // Firebase Configuration
 // =====================================
 
 const firebaseConfig = {
-
-apiKey: "YOUR_API_KEY",
-
-authDomain: "YOUR_PROJECT.firebaseapp.com",
-
-projectId: "YOUR_PROJECT_ID",
-
-storageBucket: "YOUR_PROJECT.appspot.com",
-
-messagingSenderId: "YOUR_SENDER_ID",
-
-appId: "YOUR_APP_ID"
-
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
 };
 
 // =====================================
@@ -58,10 +61,9 @@ appId: "YOUR_APP_ID"
 // =====================================
 
 const app = initializeApp(firebaseConfig);
-
 const auth = getAuth(app);
-
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 // =====================================
 // Collections
@@ -70,335 +72,120 @@ const db = getFirestore(app);
 const PROPERTY_COLLECTION = "properties";
 
 // =====================================
-// Login
+// Login / Auth helpers
 // =====================================
 
 export async function loginUser(email,password,remember){
-
-await setPersistence(
-
-auth,
-
-remember
-
-? browserLocalPersistence
-
-: browserSessionPersistence
-
-);
-
-return signInWithEmailAndPassword(
-
-auth,
-
-email,
-
-password
-
-);
-
+  await setPersistence(auth, remember ? browserLocalPersistence : browserSessionPersistence);
+  return signInWithEmailAndPassword(auth, email, password);
 }
-
-// =====================================
-// Logout
-// =====================================
 
 export async function logoutUser(){
-
-return signOut(auth);
-
+  return signOut(auth);
 }
-
-// =====================================
-// Current User
-// =====================================
 
 export function getCurrentUser(){
+  return new Promise(resolve=>{
+    const unsubscribe = onAuthStateChanged(auth, user => {
+      unsubscribe();
+      resolve(user);
+    });
+  });
+}
 
-return new Promise(resolve=>{
-
-const unsubscribe=
-
-onAuthStateChanged(auth,user=>{
-
-unsubscribe();
-
-resolve(user);
-
-});
-
-});
-
+export async function resetPassword(email){
+  return sendPasswordResetEmail(auth, email);
 }
 
 // =====================================
-// Reset Password
-// =====================================
-
-export async function resetPassword(email){
-
-return sendPasswordResetEmail(
-
-auth,
-
-email
-
-);
-
-  }
-/*=====================================
-MVR PROPERTIES
-firebase.js
-Part 2
-=====================================*/
-
-// =====================================
-// Add Property
+// Firestore: Add / Get / Update / Delete
 // =====================================
 
 export async function addProperty(property){
-
-property.createdAt = serverTimestamp();
-
-const docRef = await addDoc(
-
-collection(db, PROPERTY_COLLECTION),
-
-property
-
-);
-
-return docRef.id;
-
+  property.createdAt = serverTimestamp();
+  const docRef = await addDoc(collection(db, PROPERTY_COLLECTION), property);
+  return docRef.id;
 }
-
-// =====================================
-// Get All Properties
-// =====================================
 
 export async function getProperties(){
-
-const q = query(
-
-collection(db, PROPERTY_COLLECTION),
-
-orderBy("createdAt","desc")
-
-);
-
-const snapshot = await getDocs(q);
-
-return snapshot.docs.map(docItem=>({
-
-id: docItem.id,
-
-...docItem.data()
-
-}));
-
+  const q = query(collection(db, PROPERTY_COLLECTION), orderBy("createdAt","desc"));
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map(docItem=>({ id: docItem.id, ...docItem.data() }));
 }
-
-// =====================================
-// Get Single Property
-// =====================================
 
 export async function getProperty(id){
-
-const ref = doc(db, PROPERTY_COLLECTION, id);
-
-const snapshot = await getDoc(ref);
-
-if(!snapshot.exists()){
-
-throw new Error("Property not found.");
-
+  const ref = doc(db, PROPERTY_COLLECTION, id);
+  const snapshot = await getDoc(ref);
+  if(!snapshot.exists()) throw new Error("Property not found.");
+  return { id: snapshot.id, ...snapshot.data() };
 }
-
-return{
-
-id:snapshot.id,
-
-...snapshot.data()
-
-};
-
-}
-
-// =====================================
-// Update Property
-// =====================================
 
 export async function updateProperty(id,data){
-
-const ref = doc(db, PROPERTY_COLLECTION, id);
-
-await updateDoc(ref,data);
-
+  const ref = doc(db, PROPERTY_COLLECTION, id);
+  await updateDoc(ref,data);
 }
-
-// =====================================
-// Delete Property
-// =====================================
 
 export async function deleteProperty(id){
+  const ref = doc(db, PROPERTY_COLLECTION, id);
+  await deleteDoc(ref);
+}
 
-const ref = doc(db, PROPERTY_COLLECTION, id);
-
-await deleteDoc(ref);
-
+export function watchProperties(callback){
+  const q = query(collection(db, PROPERTY_COLLECTION), orderBy("createdAt","desc"));
+  return onSnapshot(q,(snapshot)=>{
+    const properties = snapshot.docs.map(docItem=>({ id:docItem.id, ...docItem.data() }));
+    callback(properties);
+  });
 }
 
 // =====================================
-// Realtime Listener
-// =====================================
-
-export function watchProperties(callback){
-
-const q = query(
-
-collection(db, PROPERTY_COLLECTION),
-
-orderBy("createdAt","desc")
-
-);
-
-return onSnapshot(q,(snapshot)=>{
-
-const properties = snapshot.docs.map(docItem=>({
-
-id:docItem.id,
-
-...docItem.data()
-
-}));
-
-callback(properties);
-
-});
-
-                         }
-/*=====================================
-MVR PROPERTIES
-firebase.js
-Part 3
-=====================================*/
-
-// =====================================
-// Cloudinary Configuration
-// =====================================
-
-const CLOUD_NAME = "YOUR_CLOUD_NAME";
-const UPLOAD_PRESET = "YOUR_UPLOAD_PRESET";
-
-// =====================================
-// Upload Image
+// Image upload using Firebase Storage (restored)
+// - uploadImage(file) -> returns download URL
+// - uploadImages(files) -> returns array of URLs
 // =====================================
 
 export async function uploadImage(file){
+  if(!file) throw new Error('No file provided for upload.');
 
-const formData = new FormData();
+  // create a storage ref path
+  const filename = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.\-_]/g,'')}`;
+  const path = `properties/${filename}`;
+  const ref = storageRef(storage, path);
 
-formData.append("file", file);
-formData.append("upload_preset", UPLOAD_PRESET);
+  // Use uploadBytes to upload file blob
+  // If you prefer resumable upload, you can use uploadBytesResumable
+  await uploadBytes(ref, file);
 
-const response = await fetch(
-
-`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-
-{
-
-method:"POST",
-
-body:formData
-
+  const url = await getDownloadURL(ref);
+  return url;
 }
-
-);
-
-if(!response.ok){
-
-throw new Error("Image upload failed.");
-
-}
-
-const data = await response.json();
-
-return data.secure_url;
-
-}
-
-// =====================================
-// Upload Multiple Images
-// =====================================
 
 export async function uploadImages(files){
-
-const urls = [];
-
-for(const file of files){
-
-const imageUrl = await uploadImage(file);
-
-urls.push(imageUrl);
-
-}
-
-return urls;
-
+  const urls = [];
+  for(const file of files){
+    const imageUrl = await uploadImage(file);
+    urls.push(imageUrl);
+  }
+  return urls;
 }
 
 // =====================================
-// Featured Properties
+// Other helpers
 // =====================================
 
 export async function getFeaturedProperties(){
-
-const properties = await getProperties();
-
-return properties.filter(property=>property.featured===true);
-
+  const properties = await getProperties();
+  return properties.filter(property=>property.featured===true);
 }
-
-// =====================================
-// Search Properties
-// =====================================
 
 export async function searchProperties(keyword){
-
-const properties = await getProperties();
-
-const search = keyword.toLowerCase();
-
-return properties.filter(property=>
-
-(property.title || "")
-.toLowerCase()
-.includes(search)
-
-||
-
-(property.location || "")
-.toLowerCase()
-.includes(search)
-
-||
-
-(property.type || "")
-.toLowerCase()
-.includes(search)
-
-);
-
+  const properties = await getProperties();
+  const search = (keyword||"").toLowerCase();
+  return properties.filter(property=>
+    (property.title||"").toLowerCase().includes(search) ||
+    (property.location||"").toLowerCase().includes(search) ||
+    (property.type||"").toLowerCase().includes(search)
+  );
 }
 
-// =====================================
-// Utility
-// =====================================
-
-export {
-
-auth,
-
-db
-
-};
+export { auth, db, storage };
