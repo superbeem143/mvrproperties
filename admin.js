@@ -1,12 +1,19 @@
 /*=====================================
 MVR PROPERTIES
-admin.js
+admin.js - Consolidated and fixed for admin dashboard
 =====================================*/
 
-import { addProperty, uploadImage, getProperties, deleteProperty, getProperty, updateProperty } from "./firebase.js";
+import {
+  addProperty,
+  uploadImages,
+  getProperties,
+  deleteProperty,
+  updateProperty,
+  getProperty
+} from "./firebase.js";
 
 // =============================
-// DOM Elements
+// DOM Elements (guarded)
 // =============================
 const propertyForm = document.getElementById("propertyForm");
 const imageInput = document.getElementById("images");
@@ -15,230 +22,316 @@ const previewCard = document.getElementById("previewCard");
 const publishBtn = document.getElementById("publishBtn");
 const previewBtn = document.getElementById("previewBtn");
 
-const propertyList = document.getElementById("adminPropertyList");
+// Admin lists / search
+const adminPropertyList = document.getElementById("adminPropertyList");
 const searchInput = document.getElementById("adminSearch");
+const searchPropertyBtn = document.getElementById("searchPropertyBtn");
 
+// Stats
 const totalProperties = document.getElementById("totalProperties");
 const featuredProperties = document.getElementById("featuredProperties");
 const availableProperties = document.getElementById("availableProperties");
 const soldProperties = document.getElementById("soldProperties");
 
-const imagePreview = document.getElementById("imagePreview");
-const mapInput = document.getElementById("mapLink");
-const mapPreview = document.getElementById("mapPreview");
+// Optional preview containers (may be injected if missing)
+let imagePreview = document.getElementById("imagePreview");
+let mapPreview = document.getElementById("mapPreview");
+
+if(!imagePreview && imageInput && imageInput.parentElement){
+  imagePreview = document.createElement("div");
+  imagePreview.id = "imagePreview";
+  imagePreview.style.display = "flex";
+  imagePreview.style.flexWrap = "wrap";
+  imagePreview.style.marginTop = "10px";
+  imageInput.parentElement.appendChild(imagePreview);
+}
+
+if(!mapPreview && document.getElementById("mapLink")){
+  mapPreview = document.createElement("div");
+  mapPreview.id = "mapPreview";
+  mapPreview.style.marginTop = "10px";
+  document.getElementById("mapLink").parentElement.appendChild(mapPreview);
+}
 
 // =============================
 // State
 // =============================
-let selectedImages = [];
+let selectedImages = []; // File objects
 let allProperties = [];
 let editingId = null;
-let existingImages = [];
 
 // =============================
-// Image validation & preview
+// Utilities
 // =============================
-imageInput.addEventListener("change", (e) => {
-  selectedImages = Array.from(e.target.files || []);
-  if (selectedImages.length > 10) {
-    alert("Maximum 10 images allowed.");
-    imageInput.value = "";
-    selectedImages = [];
-    imagePreview.innerHTML = "";
-    return;
+function showError(message){
+  try{ alert("Error: " + message); }catch(e){ console.error(message); }
+}
+
+function validatePhone(phone){
+  if(!phone) return false;
+  const digits = phone.replace(/[^0-9]/g, "");
+  return digits.length >= 7 && digits.length <= 15;
+}
+
+function validateMapUrl(url){
+  if(!url) return false;
+  try{
+    const u = url.trim();
+    return /google\./i.test(u) && (u.startsWith('http') || u.startsWith('https'));
+  }catch(e){
+    return false;
   }
+}
 
-  // Render previews efficiently using a document fragment
-  imagePreview.innerHTML = "";
-  const frag = document.createDocumentFragment();
-  selectedImages.forEach(file => {
-    const img = document.createElement('img');
-    img.src = URL.createObjectURL(file);
-    img.alt = file.name || 'preview';
-    img.className = 'thumb';
-    // styling via existing CSS; fallback size classes may exist
-    frag.appendChild(img);
-  });
-  imagePreview.appendChild(frag);
-});
+// Normalize status string for counting
+function normalizeStatus(s){
+  if(!s) return "";
+  return String(s).toLowerCase();
+}
 
 // =============================
-// Preview current form
+// Image input handling
 // =============================
-previewBtn.addEventListener("click", () => {
-  const title = document.getElementById("title").value || "Property Title";
-  const price = document.getElementById("price").value || "0";
-  const location = document.getElementById("location").value || "Location";
+if(imageInput){
+  imageInput.addEventListener("change", (e) => {
+    selectedImages = Array.from(e.target.files || []);
 
-  previewSection.style.display = "block";
-  previewCard.innerHTML = `\n    <div class="property-card">\n      <div class="property-content">\n        <h3>${title}</h3>\n        <p>📍 ${location}</p>\n        <h2>₹ ${price}</h2>\n        <p>Preview Mode</p>\n      </div>\n    </div>`;
-  window.scrollTo({ top: previewSection.offsetTop, behavior: "smooth" });
-});
-
-// =============================
-// Publish / Update Property
-// =============================
-propertyForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  publishBtn.disabled = true;
-  publishBtn.textContent = "Publishing...";
-
-  const phone = document.getElementById("phone").value.trim();
-  const whatsapp = document.getElementById("whatsapp").value.trim();
-  const mapLink = document.getElementById("mapLink").value.trim();
-
-  const phoneRegex = /^\+?\d{7,15}$/;
-  if (phone && !phoneRegex.test(phone)) {
-    alert("Please enter a valid phone number (digits only, optional leading '+', 7-15 digits).");
-    publishBtn.disabled = false;
-    publishBtn.textContent = "🚀 Publish Property";
-    return;
-  }
-  if (whatsapp && !phoneRegex.test(whatsapp)) {
-    alert("Please enter a valid WhatsApp number (digits only, optional leading '+', 7-15 digits).\");
-    publishBtn.disabled = false;
-    publishBtn.textContent = "🚀 Publish Property";
-    return;
-  }
-  if (mapLink) {
-    const mapsRegex = /^https?:\/\/(www\.)?(google(\.com|\.[a-z]{2})|maps\.google)\//i;
-    if (!mapsRegex.test(mapLink)) {
-      alert("Please enter a valid Google Maps URL (it should point to google.com/maps or maps.google).");
-      publishBtn.disabled = false;
-      publishBtn.textContent = "🚀 Publish Property";
+    if (selectedImages.length > 10) {
+      showError("Maximum 10 images allowed.");
+      imageInput.value = "";
+      selectedImages = [];
+      if(imagePreview) imagePreview.innerHTML = "";
       return;
     }
-  }
 
-  try {
-    const imageUrls = [];
-    if (selectedImages.length > 0) {
-      for (const file of selectedImages) {
-        try {
-          const url = await uploadImage(file);
-          imageUrls.push(url);
-        } catch (imgErr) {
-          console.error('Image upload failed for', file.name, imgErr);
-          throw new Error(`Failed to upload image ${file.name}`);
+    // Show previews
+    if(imagePreview){
+      imagePreview.innerHTML = "";
+      selectedImages.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const img = document.createElement('img');
+          img.src = ev.target.result;
+          img.style.width = '90px';
+          img.style.height = '90px';
+          img.style.objectFit = 'cover';
+          img.style.borderRadius = '8px';
+          img.style.margin = '5px';
+          imagePreview.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+  });
+}
+
+// =============================
+// Preview
+// =============================
+if(previewBtn){
+  previewBtn.addEventListener("click", ()=>{
+    const title = document.getElementById("title")?.value || "Property Title";
+    const price = document.getElementById("price")?.value || "0";
+    const location = document.getElementById("location")?.value || "Location";
+
+    if(previewSection && previewCard){
+      previewSection.style.display = "block";
+      previewCard.innerHTML = `\n        <div class="property-card">\n          <div class="property-content">\n            <h3>${title}</h3>\n            <p>📍 ${location}</p>\n            <h2>₹ ${price}</h2>\n            <p>Preview Mode</p>\n          </div>\n        </div>`;
+      window.scrollTo({ top: previewSection.offsetTop, behavior: 'smooth' });
+    }
+  });
+}
+
+// =============================
+// Form submit - Add / Edit
+// =============================
+if(propertyForm){
+  propertyForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if(!publishBtn) return;
+    publishBtn.disabled = true;
+    publishBtn.textContent = 'Publishing...';
+
+    try{
+      // Gather values
+      const title = document.getElementById('title')?.value?.trim();
+      const price = Number(document.getElementById('price')?.value || 0);
+      const type = document.getElementById('type')?.value || '';
+      const area = document.getElementById('area')?.value || '';
+      const facing = document.getElementById('facing')?.value || '';
+      const location = document.getElementById('location')?.value || '';
+      const description = document.getElementById('description')?.value || '';
+      const phone = document.getElementById('phone')?.value || '';
+      const whatsapp = document.getElementById('whatsapp')?.value || '';
+      const mapLink = document.getElementById('mapLink')?.value || '';
+      const status = document.getElementById('status')?.value || '';
+      const featured = document.getElementById('featured')?.value === 'true';
+
+      // Basic validation
+      if(!title) throw new Error('Please enter property title.');
+      if(!price || price <= 0) throw new Error('Please enter a valid price.');
+      if(!validatePhone(phone)) throw new Error('Please enter a valid phone number (7-15 digits).');
+      if(whatsapp && !validatePhone(whatsapp)) throw new Error('Please enter a valid WhatsApp number (7-15 digits).');
+      if(mapLink && !validateMapUrl(mapLink)) throw new Error('Please provide a valid Google Maps URL (must start with http/https and contain google.).');
+
+      // Handle images: upload if new images selected; when editing and no new images, preserve existing
+      let images = [];
+      if(selectedImages && selectedImages.length > 0){
+        images = await uploadImages(selectedImages);
+      } else if(editingId){
+        // preserve existing images for editing
+        try{
+          const existing = await getProperty(editingId);
+          images = existing.images || [];
+        }catch(err){
+          images = [];
         }
       }
-    }
 
-    const payload = {
-      title: document.getElementById("title").value.trim(),
-      price: Number(document.getElementById("price").value),
-      type: document.getElementById("type").value,
-      area: document.getElementById("area").value,
-      facing: document.getElementById("facing").value,
-      location: document.getElementById("location").value,
-      description: document.getElementById("description").value,
-      phone,
-      whatsapp,
-      map: mapLink,
-      status: document.getElementById("status").value,
-      featured: document.getElementById("featured").value === "true"
-    };
+      const propertyData = {
+        title,
+        price,
+        type,
+        area,
+        facing,
+        location,
+        description,
+        phone,
+        whatsapp,
+        map: mapLink,
+        status,
+        featured,
+        images
+      };
 
-    if (editingId) {
-      // Preserve existing images if no new images uploaded
-      payload.images = imageUrls.length > 0 ? imageUrls : existingImages;
-      await updateProperty(editingId, payload);
-      alert('✅ Property updated successfully!');
+      if(!editingId){
+        await addProperty(propertyData);
+        alert('✅ Property Published Successfully!');
+      }else{
+        await updateProperty(editingId, propertyData);
+        alert('✅ Property Updated Successfully!');
+      }
+
+      // reset
+      propertyForm.reset();
+      selectedImages = [];
+      if(imagePreview) imagePreview.innerHTML = '';
+      if(previewSection) previewSection.style.display = 'none';
       editingId = null;
-      existingImages = [];
-    } else {
-      payload.images = imageUrls;
-      await addProperty(payload);
-      alert('✅ Property published successfully!');
+
+      // reload
+      await loadProperties();
+
+    }catch(err){
+      console.error(err);
+      showError(err.message || 'Failed to publish property.');
+    }finally{
+      publishBtn.disabled = false;
+      publishBtn.textContent = '🚀 Publish Property';
     }
-
-    propertyForm.reset();
-    selectedImages = [];
-    imagePreview.innerHTML = '';
-    previewSection.style.display = 'none';
-    await loadProperties();
-  } catch (error) {
-    console.error('Publish error:', error);
-    alert(`Failed to publish property: ${error.message || 'Unknown error'}`);
-  } finally {
-    publishBtn.disabled = false;
-    publishBtn.textContent = '🚀 Publish Property';
-  }
-});
+  });
+}
 
 // =============================
-// Load & Render
+// Load & Render Properties
 // =============================
-async function loadProperties() {
-  try {
+async function loadProperties(){
+  try{
     allProperties = await getProperties();
     renderProperties(allProperties);
     updateStats(allProperties);
-  } catch (error) {
-    console.error('Failed to load properties:', error);
-    alert('Failed to load properties. See console for details.');
+  }catch(err){
+    console.error('Load properties failed', err);
+    showError('Failed to load properties.');
   }
 }
 
-function renderProperties(properties) {
-  if (!Array.isArray(properties) || properties.length === 0) {
-    propertyList.innerHTML = '<p>No Properties Found.</p>';
+function renderProperties(properties){
+  if(!adminPropertyList) return;
+  adminPropertyList.innerHTML = '';
+
+  if(!properties || properties.length === 0){
+    adminPropertyList.innerHTML = '<p>No Properties Found.</p>';
     return;
   }
 
-  const html = properties.map(property => {
-    const img = (property.images && property.images[0]) ? property.images[0] : '';
-    const title = property.title || '';
-    const price = property.price || '';
-    const location = property.location || '';
-    const status = property.status || '';
+  properties.forEach(property => {
+    const card = document.createElement('div');
+    card.className = 'admin-card';
+    const imgSrc = (property.images && property.images[0]) ? property.images[0] : '';
 
-    return `\n      <div class="admin-card">\n        <img src="${img}" alt="">\n        <div class="admin-content">\n          <h3>${escapeHtml(title)}</h3>\n          <p>₹ ${escapeHtml(String(price))}</p>\n          <p>${escapeHtml(location)}</p>\n          <p>Status : ${escapeHtml(status)}</p>\n          <div class="admin-actions">\n            <button type="button" onclick="window.editProperty('${property.id}')">Edit</button>\n            <button type="button" onclick="window.previewProperty('${property.id}')">Preview</button>\n            <button type="button" onclick="window.removeProperty('${property.id}')">Delete</button>\n          </div>\n        </div>\n      </div>`;
-  }).join('');
+    card.innerHTML = `\n      <img src="${imgSrc}" alt="">\n      <div class="admin-content">\n        <h3>${property.title}</h3>\n        <p>₹ ${property.price}</p>\n        <p>${property.location}</p>\n        <p>Status : ${property.status}</p>\n        <div style="display:flex;gap:8px;margin-top:8px;">\n          <button class="outline-btn editBtn">Edit</button>\n          <button class="gold-btn deleteBtn">Delete</button>\n        </div>\n      </div>`;
 
-  propertyList.innerHTML = html;
+    // Edit
+    card.querySelector('.editBtn').addEventListener('click', ()=>{
+      startEdit(property);
+    });
+
+    // Delete
+    card.querySelector('.deleteBtn').addEventListener('click', async ()=>{
+      const ok = confirm('Delete this property? This action cannot be undone.');
+      if(!ok) return;
+      try{
+        await deleteProperty(property.id);
+        await loadProperties();
+        alert('✅ Property deleted');
+      }catch(err){
+        console.error(err);
+        showError('Failed to delete property.');
+      }
+    });
+
+    adminPropertyList.appendChild(card);
+  });
 }
 
-function updateStats(properties) {
-  totalProperties.textContent = properties.length;
-  // Count only boolean true
-  featuredProperties.textContent = properties.reduce((count, p) => count + (p.featured === true ? 1 : 0), 0);
-  availableProperties.textContent = properties.filter(p => (p.status || '').toLowerCase() === 'available').length;
-  soldProperties.textContent = properties.filter(p => (p.status || '').toLowerCase() === 'sold').length;
+function updateStats(properties){
+  if(!totalProperties) return;
+  totalProperties.textContent = properties.length || 0;
+  const avail = properties.filter(p=> normalizeStatus(p.status) === 'available').length;
+  const sold = properties.filter(p=> normalizeStatus(p.status) === 'sold').length;
+  const featured = properties.filter(p=>p.featured===true).length;
+
+  if(availableProperties) availableProperties.textContent = avail;
+  if(soldProperties) soldProperties.textContent = sold;
+  if(featuredProperties) featuredProperties.textContent = featured;
 }
 
 // =============================
 // Search
 // =============================
-searchInput.addEventListener('input', () => {
-  const keyword = searchInput.value.trim().toLowerCase();
-  const filtered = allProperties.filter(p => (p.title || '').toLowerCase().includes(keyword) || (p.location || '').toLowerCase().includes(keyword));
-  renderProperties(filtered);
-});
+if(searchInput){
+  searchInput.addEventListener('input', ()=>{
+    const q = (searchInput.value || '').toLowerCase().trim();
+    if(!q){ renderProperties(allProperties); return; }
+    const filtered = allProperties.filter(p => (
+      (p.title || '').toLowerCase().includes(q) ||
+      (p.location || '').toLowerCase().includes(q) ||
+      (p.type || '').toLowerCase().includes(q)
+    ));
+    renderProperties(filtered);
+  });
+}
+
+if(searchPropertyBtn){
+  searchPropertyBtn.addEventListener('click', ()=>{
+    const q = (searchInput?.value || '').toLowerCase().trim();
+    if(!q){ renderProperties(allProperties); return; }
+    const filtered = allProperties.filter(p => (
+      (p.title || '').toLowerCase().includes(q) ||
+      (p.location || '').toLowerCase().includes(q) ||
+      (p.type || '').toLowerCase().includes(q)
+    ));
+    renderProperties(filtered);
+  });
+}
 
 // =============================
-// Delete
+// Edit flow
 // =============================
-window.removeProperty = async (id) => {
-  try {
-    const ok = confirm('Delete this property? This cannot be undone.');
-    if (!ok) return;
-    await deleteProperty(id);
-    alert('✅ Property deleted.');
-    await loadProperties();
-  } catch (error) {
-    console.error('Delete failed:', error);
-    alert('Failed to delete property. See console for details.');
-  }
-};
-
-// =============================
-// Edit
-// =============================
-window.editProperty = async function (id) {
-  try {
-    const property = await getProperty(id);
-    editingId = id;
+async function startEdit(property){
+  try{
+    editingId = property.id;
     document.getElementById('title').value = property.title || '';
     document.getElementById('price').value = property.price || '';
     document.getElementById('type').value = property.type || '';
@@ -252,55 +345,48 @@ window.editProperty = async function (id) {
     document.getElementById('status').value = property.status || '';
     document.getElementById('featured').value = property.featured ? 'true' : 'false';
 
-    existingImages = Array.isArray(property.images) ? property.images.slice() : [];
-
-    // render existing images into imagePreview
-    imagePreview.innerHTML = '';
-    const frag = document.createDocumentFragment();
-    existingImages.forEach(url => {
-      const img = document.createElement('img');
-      img.src = url;
-      img.alt = 'property image';
-      img.className = 'thumb';
-      frag.appendChild(img);
-    });
-    imagePreview.appendChild(frag);
+    // show existing images in preview area
+    if(imagePreview){
+      imagePreview.innerHTML = '';
+      (property.images || []).forEach(url => {
+        const img = document.createElement('img');
+        img.src = url;
+        img.style.width = '90px';
+        img.style.height = '90px';
+        img.style.objectFit = 'cover';
+        img.style.borderRadius = '8px';
+        img.style.margin = '5px';
+        imagePreview.appendChild(img);
+      });
+    }
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  } catch (error) {
-    console.error('Failed to load property for edit:', error);
-    alert('Failed to load property for edit. See console for details.');
+  }catch(err){
+    console.error(err);
+    showError('Failed to start edit.');
   }
-};
-
-// =============================
-// Preview property from list
-// =============================
-window.previewProperty = function (id) {
-  const property = allProperties.find(p => p.id === id);
-  if (!property) {
-    alert('Property not found for preview.');
-    return;
-  }
-  const title = property.title || 'Property Title';
-  const location = property.location || 'Location';
-  const price = property.price || '0';
-  previewSection.style.display = 'block';
-  previewCard.innerHTML = `\n    <div class="property-card">\n      <div class="property-content">\n        <h3>${escapeHtml(title)}</h3>\n        <p>📍 ${escapeHtml(location)}</p>\n        <h2>₹ ${escapeHtml(String(price))}</h2>\n        <p>Preview Mode</p>\n      </div>\n    </div>`;
-  window.scrollTo({ top: previewSection.offsetTop, behavior: 'smooth' });
-};
-
-// =============================
-// Utilities
-// =============================
-function escapeHtml(str) {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
 }
 
+// Expose for other scripts (if any)
+window.startEdit = startEdit;
+
+// =============================
+// Map preview
+// =============================
+if(document.getElementById('mapLink')){
+  document.getElementById('mapLink').addEventListener('input', (e)=>{
+    const url = (e.target.value || '').trim();
+    if(mapPreview){
+      if(validateMapUrl(url)){
+        mapPreview.innerHTML = `<iframe src="${url}" width="100%" height="250" style="border:0;" loading="lazy"></iframe>`;
+      }else{
+        mapPreview.innerHTML = '';
+      }
+    }
+  });
+}
+
+// =============================
 // Start
+// =============================
 loadProperties();
