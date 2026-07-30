@@ -1,8 +1,7 @@
 /*=====================================
 MVR PROPERTIES
 firebase.js
-Restored image upload to use Firebase Storage so publishing works again.
-Do NOT change other exports or IDs. Keep Firestore & Auth logic intact.
+Only change: set Cloudinary constants to provided values (do NOT modify firebaseConfig or any other code).
 =====================================*/
 
 // Firebase SDK
@@ -33,6 +32,10 @@ import {
   orderBy,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+// Cloudinary config (updated per request)
+const CLOUD_NAME = "onrnn2hn";
+const UPLOAD_PRESET = "mvrproperties";
 
 // Storage (restored upload using Firebase Storage)
 import {
