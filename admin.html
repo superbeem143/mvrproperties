@@ -5,8 +5,7 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>
 
@@ -14,11 +13,9 @@ MVR Properties Admin
 
 </title>
 
-<link rel="stylesheet"
-href="style.css">
+<link rel="stylesheet" href="style.css">
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 </head>
 
@@ -28,25 +25,15 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 <div class="logo">
 
-🏡 <span>MVR</span> Properties
+<img src="logo.svg" alt="MVR Properties" class="site-logo" style="height:34px">
 
 </div>
 
 <div class="header-buttons">
 
-<a href="index.html"
-class="outline-btn">
+<a href="index.html" class="outline-btn">Home</a>
 
-Home
-
-</a>
-
-<button id="logoutBtn"
-class="gold-btn">
-
-Logout
-
-</button>
+<button id="logoutBtn" class="gold-btn">Logout</button>
 
 </div>
 
@@ -54,125 +41,53 @@ Logout
 
 <section class="section">
 
-<h1 class="section-title">
+<h1 class="section-title">Admin Dashboard</h1>
 
-Admin Dashboard
-
-</h1>
-
-<p class="note-centered">
-
-Add, Edit & Delete Properties
-
-</p>
+<p class="note-centered">Add, Edit & Delete Properties</p>
 
 <form id="propertyForm">
 
 <div class="form-grid">
 
 <div class="form-group">
-
-<label>
-
-Property Title
-
-</label>
-
-<input
-type="text"
-id="title"
-required>
-
+<label>Property Title</label>
+<input type="text" id="title" required>
 </div>
 
 <div class="form-group">
-
-<label>
-
-Price
-
-</label>
-
-<input
-type="number"
-id="price"
-required>
-
+<label>Price</label>
+<input type="number" id="price" required>
 </div>
 
 <div class="form-group">
-
-<label>
-
-Property Type
-
-</label>
-
+<label>Property Type</label>
 <select id="type">
-
 <option>Open Plot</option>
-
 <option>House</option>
-
 <option>Apartment</option>
-
 <option>Farm Land</option>
-
 <option>Commercial</option>
-
 </select>
-
 </div>
 
 <div class="form-group">
-
-<label>
-
-Area
-
-</label>
-
-<input
-type="text"
-id="area"
-placeholder="120 Sq.Yards">
-
+<label>Area</label>
+<input type="text" id="area" placeholder="120 Sq.Yards">
 </div>
 
 <div class="form-group">
-
-<label>
-
-Facing
-
-</label>
-
+<label>Facing</label>
 <select id="facing">
-
 <option>East</option>
-
 <option>West</option>
-
 <option>North</option>
-
 <option>South</option>
-
 </select>
-
 </div>
 
 <div class="form-group">
-
-<label>
-
-Location
-
-</label>
-
-<input
-type="text"
-id="location">
-
+<label>Location</label>
+<input type="text" id="location">
 </div>
 
 </div>
@@ -180,350 +95,87 @@ id="location">
 <div class="form-grid">
 
 <div class="form-group">
-
-<label>
-
-Upload Property Images
-(Max 10)
-
-</label>
-
-<input
-type="file"
-id="images"
-accept="image/*"
-multiple>
-
-<small>
-Maximum 10 Images
-</small>
-
-<!-- Image preview thumbnails -->
+<label>Upload Property Images (Max 10)</label>
+<input type="file" id="images" accept="image/*" multiple>
+<small>Maximum 10 Images</small>
 <div id="imagePreview"></div>
-
 </div>
 
 <div class="form-group">
-
-<label>
-
-Google Maps Link
-
-</label>
-
-<input
-type="url"
-id="mapLink"
-placeholder="https://maps.google.com/...">
-
-<!-- Map preview iframe container -->
+<label>Google Maps Link</label>
+<input type="url" id="mapLink" placeholder="https://maps.google.com/...">
 <div id="mapPreview"></div>
-
 </div>
 
 <div class="form-group">
-
-<label>
-
-Phone Number
-
-</label>
-
-<input
-type="tel"
-id="phone"
-placeholder="+91 9876543210">
-
+<label>Phone Number</label>
+<input type="tel" id="phone" placeholder="+91 9876543210">
 </div>
 
 <div class="form-group">
-
-<label>
-
-WhatsApp Number
-
-</label>
-
-<input
-type="tel"
-id="whatsapp"
-placeholder="+91 9876543210">
-
+<label>WhatsApp Number</label>
+<input type="tel" id="whatsapp" placeholder="+91 9876543210">
 </div>
 
 </div>
 
 <div class="form-group">
-
-<label>
-
-Property Description
-
-</label>
-
-<textarea
-id="description"
-rows="6"
-placeholder="Write complete property details..."></textarea>
-
+<label>Property Description</label>
+<textarea id="description" rows="6" placeholder="Write complete property details..."></textarea>
 </div>
 
 <div class="form-grid">
 
 <div class="form-group">
-
-<label>
-
-Property Status
-
-</label>
-
+<label>Property Status</label>
 <select id="status">
-
-<option value="available">
-
-Available
-
-</option>
-
-<option value="sold">
-
-Sold
-
-</option>
-
-<option value="reserved">
-
-Reserved
-
-</option>
-
+<option value="available">Available</option>
+<option value="sold">Sold</option>
+<option value="reserved">Reserved</option>
 </select>
-
 </div>
 
 <div class="form-group">
-
-<label>
-
-Featured Property
-
-</label>
-
+<label>Featured Property</label>
 <select id="featured">
-
-<option value="true">
-
-Yes
-
-</option>
-
-<option value="false">
-
-No
-
-</option>
-
+<option value="true">Yes</option>
+<option value="false">No</option>
 </select>
-
 </div>
 
 </div>
 
 <div class="form-actions">
-
-<button
-type="button"
-id="previewBtn"
-class="outline-btn">
-
-👀 Preview
-
-</button>
-
-<button
-type="submit"
-id="publishBtn"
-class="gold-btn">
-
-🚀 Publish Property
-
-</button>
-
+<button type="button" id="previewBtn" class="outline-btn">👀 Preview</button>
+<button type="submit" id="publishBtn" class="gold-btn">🚀 Publish Property</button>
 </div>
 
 </form>
 
-<!-- Preview Area -->
-
-<section
-id="previewSection"
-class="previewSection">
-
-<h2 class="section-title">
-
-Property Preview
-
-</h2>
-
-<div id="previewCard">
-
-<!-- Preview generated by admin.js -->
-
-</div>
-
- </section>
-
-<!-- ==========================
-MANAGE PROPERTIES
-========================== -->
+</section>
 
 <section class="section">
 
-<h2 class="section-title">
-
-Manage Properties
-
-</h2>
+<h2 class="section-title">Manage Properties</h2>
 
 <div class="search-box">
-
-<input
-type="text"
-id="adminSearch"
-placeholder="Search Property...">
-
-<button
-id="searchPropertyBtn"
-class="gold-btn">
-
-🔍 Search
-
-</button>
-
+<input type="text" id="adminSearch" placeholder="Search Property...">
+<button id="searchPropertyBtn" class="gold-btn">🔍 Search</button>
 </div>
 
-<div id="adminPropertyList"
-class="property-grid">
-
-<!-- Properties Loaded Here -->
-
-</div>
+<div id="adminPropertyList" class="property-grid"></div>
 
 </section>
-
-<!-- ==========================
-DASHBOARD STATS
-========================== -->
 
 <section class="stats">
-
-<div class="stat-card">
-
-<h2 id="totalProperties">
-
-0
-
-</h2>
-
-<p>
-
-Total Properties
-
-</p>
-
-</div>
-
-<div class="stat-card">
-
-<h2 id="featuredProperties">
-
-0
-
-</h2>
-
-<p>
-
-Featured
-
-</p>
-
-</div>
-
-<div class="stat-card">
-
-<h2 id="availableProperties">
-
-0
-
-</h2>
-
-<p>
-
-Available
-
-</p>
-
-</div>
-
-<div class="stat-card">
-
-<h2 id="soldProperties">
-
-0
-
-</h2>
-
-<p>
-
-Sold
-
-</p>
-
-</div>
-
+<div class="stat-card"><h2 id="totalProperties">0</h2><p>Total Properties</p></div>
+<div class="stat-card"><h2 id="featuredProperties">0</h2><p>Featured</p></div>
+<div class="stat-card"><h2 id="availableProperties">0</h2><p>Available</p></div>
+<div class="stat-card"><h2 id="soldProperties">0</h2><p>Sold</p></div>
 </section>
 
-<!-- ==========================
-DELETE CONFIRM MODAL
-========================== -->
+<div id="deleteModal" class="modal"><div class="modal-content"><div class="modal-body"><h2>Delete Property?</h2><p>This action cannot be undone.</p><div class="modal-buttons"><button id="cancelDelete" class="outline-btn">Cancel</button></div></div></div></div>
 
-<div
-id="deleteModal"
-class="modal">
-
-<div class="modal-content">
-
-<div class="modal-body">
-
-<h2>
-
-Delete Property?
-
-</h2>
-
-<p>
-
-This action cannot be undone.
-
-</p>
-
-<div class="modal-buttons">
-
-<button
-id="cancelDelete"
-class="outline-btn">
-
-Cancel
-
-</button> 
-
-</div>
-</div>
-</div>
-</div>
-
-<!-- Load admin script -->
 <script type="module" src="admin.js"></script>
 </body>
 </html>
