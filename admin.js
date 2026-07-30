@@ -201,7 +201,8 @@ function renderProperties(properties) {
 
 function updateStats(properties) {
   totalProperties.textContent = properties.length;
-  featuredProperties.textContent = properties.filter(p => p.featured === true).length;
+  // Count only boolean true
+  featuredProperties.textContent = properties.reduce((count, p) => count + (p.featured === true ? 1 : 0), 0);
   availableProperties.textContent = properties.filter(p => (p.status || '').toLowerCase() === 'available').length;
   soldProperties.textContent = properties.filter(p => (p.status || '').toLowerCase() === 'sold').length;
 }
