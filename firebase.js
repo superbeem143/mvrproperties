@@ -1,7 +1,8 @@
 /*=====================================
 MVR PROPERTIES
 firebase.js
-Only change: restore firebaseConfig to provided production values. Do NOT change any other code.
+Only change: restore Cloudinary uploadImage/uploadImages implementation. Do NOT change other logic.
+Committed per user request.
 =====================================*/
 
 // Firebase SDK
@@ -293,61 +294,42 @@ const CLOUD_NAME = "onrnn2hn";
 const UPLOAD_PRESET = "mvrproperties";
 
 // =====================================
-// Upload Image
+// Upload Image (Cloudinary)
 // =====================================
 
 export async function uploadImage(file){
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", UPLOAD_PRESET);
 
-const formData = new FormData();
+  const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+    method: "POST",
+    body: formData
+  });
 
-formData.append("file", file);
+  if(!response.ok){
+    // try to surface server message
+    let txt = null;
+    try{ txt = await response.text(); }catch(e){/* ignore */}
+    console.error('Cloudinary upload failed', response.status, response.statusText, txt);
+    throw new Error("Image upload failed.");
+  }
 
-formData.append("upload_preset", UPLOAD_PRESET);
-
-const response = await fetch(
-
-`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-
-{
-
-method:"POST",
-
-body:formData
-
-}
-
-);
-
-if(!response.ok){
-
-throw new Error("Image upload failed.");
-
-}
-
-const data = await response.json();
-
-return data.secure_url;
-
+  const data = await response.json();
+  return data.secure_url;
 }
 
 // =====================================
-// Upload Multiple Images
+// Upload Multiple Images (Cloudinary)
 // =====================================
 
 export async function uploadImages(files){
-
-const urls = [];
-
-for(const file of files){
-
-const imageUrl = await uploadImage(file);
-
-urls.push(imageUrl);
-
-}
-
-return urls;
-
+  const urls = [];
+  for(const file of files){
+    const imageUrl = await uploadImage(file);
+    urls.push(imageUrl);
+  }
+  return urls;
 }
 
 // =====================================
@@ -404,4 +386,4 @@ auth,
 
 db
 
-};
+};,
