@@ -3,7 +3,7 @@ MVR PROPERTIES
 firebase.js
 Only change: restore Cloudinary uploadImage/uploadImages implementation. Do NOT change other logic.
 Committed per user request.
-=====================================*/
+======================================*/
 
 // Firebase SDK
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
@@ -386,4 +386,4 @@ auth,
 
 db
 
-};,
+};
