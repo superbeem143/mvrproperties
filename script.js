@@ -1,7 +1,7 @@
 /*=====================================
 MVR PROPERTIES
 script.js (module)
-Updated to use modular firebase functions and avoid console errors
+Preserves existing Firebase + modal + publish logic; adds filter support
 =====================================*/
 
 import { getProperties } from './firebase.js';
@@ -15,6 +15,11 @@ const latestProperties = document.getElementById('latestProperties'); // may be 
 
 const searchInput = document.getElementById('searchInput');
 const searchBtn = document.getElementById('searchBtn');
+
+// NEW filters (added for advanced search)
+const filterLocation = document.getElementById('filterLocation');
+const filterType = document.getElementById('filterType');
+const filterBudget = document.getElementById('filterBudget');
 
 const propertyModal = document.getElementById('propertyModal');
 const closeModal = document.querySelector('.close-modal');
@@ -38,7 +43,7 @@ let filteredProperties = [];
 let currentProperty = null;
 
 // =============================
-// Search
+// Event wiring: Search + Filters
 // =============================
 
 if (searchBtn) searchBtn.addEventListener('click', searchProperties);
@@ -48,19 +53,59 @@ if (searchInput) {
   });
 }
 
+// run search on select change for instant feedback
+if (filterLocation) filterLocation.addEventListener('change', searchProperties);
+if (filterType) filterType.addEventListener('change', searchProperties);
+if (filterBudget) filterBudget.addEventListener('change', searchProperties);
+
+// keep "search while typing" behavior for the keyword input
+if (searchInput) searchInput.addEventListener('input', () => { searchProperties(); });
+
+// =============================
+// Search (updated to respect filters)
+// =============================
 function searchProperties() {
   const keyword = (searchInput?.value || '').toLowerCase().trim();
-  if (keyword === '') {
-    renderProperties(properties);
-    return;
+  const loc = (filterLocation?.value || '').toLowerCase();
+  const type = (filterType?.value || '').toLowerCase();
+  const budget = (filterBudget?.value || '').toLowerCase();
+
+  // Start from master list
+  let list = Array.isArray(properties) ? properties.slice() : [];
+
+  // Keyword filter (title/location/type/description)
+  if (keyword) {
+    list = list.filter(p => {
+      return (p.title || '').toLowerCase().includes(keyword) ||
+             (p.location || '').toLowerCase().includes(keyword) ||
+             (p.type || '').toLowerCase().includes(keyword) ||
+             (p.description || '').toLowerCase().includes(keyword);
+    });
   }
-  filteredProperties = properties.filter(property => {
-    return (
-      (property.title || '').toLowerCase().includes(keyword) ||
-      (property.location || '').toLowerCase().includes(keyword) ||
-      (property.type || '').toLowerCase().includes(keyword)
-    );
-  });
+
+  // Location filter (contains)
+  if (loc) {
+    list = list.filter(p => (p.location || '').toLowerCase().includes(loc));
+  }
+
+  // Type filter (contains)
+  if (type) {
+    list = list.filter(p => (p.type || '').toLowerCase().includes(type));
+  }
+
+  // Budget filter (simple numeric ranges)
+  if (budget) {
+    list = list.filter(p => {
+      const price = Number(p.price || 0);
+      if (budget === '0-100000') return price <= 100000;
+      if (budget === '100000-300000') return price >= 100000 && price <= 300000;
+      if (budget === '300000-600000') return price >= 300000 && price <= 600000;
+      if (budget === '600000+') return price >= 600000;
+      return true;
+    });
+  }
+
+  filteredProperties = list;
   renderProperties(filteredProperties);
 }
 
@@ -106,6 +151,7 @@ function createPropertyCard(property) {
   const h3 = document.createElement('h3');
   h3.textContent = property.title || '';
   const pLoc = document.createElement('p');
+  pLoc.className = 'meta';
   pLoc.textContent = `📍 ${property.location || ''}`;
   const h2 = document.createElement('h2');
   h2.textContent = `₹ ${property.price || ''}`;
@@ -222,6 +268,7 @@ async function loadProperties() {
   try {
     const docs = await getProperties();
     properties = Array.isArray(docs) ? docs : [];
+    // initial default render shows all or featured as before
     renderProperties(properties);
   } catch (error) {
     console.error('Property Loading Error:', error);
@@ -235,11 +282,6 @@ const loginBtn = document.getElementById('loginBtn');
 if (loginBtn) loginBtn.addEventListener('click', () => { window.location.href = 'login.html'; });
 const addPropertyBtn = document.getElementById('addPropertyBtn');
 if (addPropertyBtn) addPropertyBtn.addEventListener('click', () => { window.location.href = 'admin.html'; });
-
-// =============================
-// Search while typing
-// =============================
-if (searchInput) searchInput.addEventListener('input', () => { searchProperties(); });
 
 // =============================
 // Escape key closes modal
