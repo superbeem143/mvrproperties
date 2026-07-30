@@ -19,6 +19,7 @@ const propertyList = document.getElementById("adminPropertyList");
 const searchInput = document.getElementById("adminSearch");
 
 const totalProperties = document.getElementById("totalProperties");
+const featuredProperties = document.getElementById("featuredProperties");
 const availableProperties = document.getElementById("availableProperties");
 const soldProperties = document.getElementById("soldProperties");
 
@@ -192,7 +193,7 @@ function renderProperties(properties) {
     const location = property.location || '';
     const status = property.status || '';
 
-    return `\n      <div class="admin-card">\n        <img src="${img}" alt="">\n        <div class="admin-content">\n          <h3>${escapeHtml(title)}</h3>\n          <p>₹ ${escapeHtml(String(price))}</p>\n          <p>${escapeHtml(location)}</p>\n          <p>Status : ${escapeHtml(status)}</p>\n          <div style="display:flex;gap:8px;flex-wrap:wrap;">\n            <button type=\"button\" onclick=\"window.editProperty('${property.id}')\">Edit</button>\n            <button type=\"button\" onclick=\"window.previewProperty('${property.id}')\">Preview</button>\n            <button type=\"button\" onclick=\"window.removeProperty('${property.id}')\">Delete</button>\n          </div>\n        </div>\n      </div>`;
+    return `\n      <div class="admin-card">\n        <img src="${img}" alt="">\n        <div class="admin-content">\n          <h3>${escapeHtml(title)}</h3>\n          <p>₹ ${escapeHtml(String(price))}</p>\n          <p>${escapeHtml(location)}</p>\n          <p>Status : ${escapeHtml(status)}</p>\n          <div class="admin-actions">\n            <button type="button" onclick="window.editProperty('${property.id}')">Edit</button>\n            <button type="button" onclick="window.previewProperty('${property.id}')">Preview</button>\n            <button type="button" onclick="window.removeProperty('${property.id}')">Delete</button>\n          </div>\n        </div>\n      </div>`;
   }).join('');
 
   propertyList.innerHTML = html;
@@ -200,6 +201,7 @@ function renderProperties(properties) {
 
 function updateStats(properties) {
   totalProperties.textContent = properties.length;
+  featuredProperties.textContent = properties.filter(p => p.featured === true).length;
   availableProperties.textContent = properties.filter(p => (p.status || '').toLowerCase() === 'available').length;
   soldProperties.textContent = properties.filter(p => (p.status || '').toLowerCase() === 'sold').length;
 }
