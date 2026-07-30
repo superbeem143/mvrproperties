@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Luxury Gold SVG logo for MVR Properties
+     - Transparent background
+     - Primary gold: #D4AF37
+     - Designed as combined mark (house + monogram MVR) + wordmark
+-->
+<svg width="420" height="80" viewBox="0 0 420 80" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MVR Properties logo">
+  <title>MVR Properties</title>
+  <defs>
+    <linearGradient id="goldGrad" x1="0" x2="1">
+      <stop offset="0%" stop-color="#E6C86A"/>
+      <stop offset="100%" stop-color="#D4AF37"/>
+    </linearGradient>
+  </defs>
+  <!-- mark: abstract house + M monogram -->
+  <g transform="translate(8,8)">
+    <path d="M24 4 L44 20 V44 H4 V20 Z" fill="url(#goldGrad)" stroke="#C79B18" stroke-width="1"/>
+    <!-- inner M monogram -->
+    <path d="M8 42 L8 24 L15 32 L22 24 L22 42" fill="none" stroke="#000" stroke-width="0.8" opacity="0.03"/>
+    <path d="M9 40 L9 26 L15 32 L21 26 L21 40" fill="none" stroke="#FFFFFF" stroke-width="0.9" opacity="0.06"/>
+  </g>
+  <!-- Wordmark -->
+  <g transform="translate(86,44)">
+    <text x="0" y="0" font-family="'Playfair Display', serif" font-weight="700" font-size="28" fill="#D4AF37">MVR</text>
+    <text x="68" y="0" font-family="'Poppins', sans-serif" font-weight="600" font-size="18" fill="#D4AF37">Properties</text>
+  </g>
+</svg>
