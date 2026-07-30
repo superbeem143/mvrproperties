@@ -1,448 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MVR Properties | Admin Login</title>
 
-<title>MVR Properties | Admin Login</title>
+  <!-- Global theme -->
+  <link rel="stylesheet" href="style.css">
 
-<link rel="stylesheet" href="style.css">
-
-<style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
-
-body{
-min-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-background:linear-gradient(135deg,#0f172a,#1e3a8a);
-padding:20px;
-}
-
-.login-container{
-width:100%;
-max-width:420px;
-background:#fff;
-padding:35px;
-border-radius:18px;
-box-shadow:0 15px 40px rgba(0,0,0,.25);
-}
-
-.logo{
-text-align:center;
-font-size:32px;
-font-weight:bold;
-color:#1d4ed8;
-margin-bottom:10px;
-}
-
-.subtitle{
-text-align:center;
-color:#666;
-margin-bottom:30px;
-}
-
-.input-group{
-margin-bottom:18px;
-}
-
-.input-group label{
-display:block;
-font-weight:bold;
-margin-bottom:8px;
-}
-
-.input-group input{
-width:100%;
-padding:13px;
-font-size:16px;
-border:1px solid #ccc;
-border-radius:8px;
-outline:none;
-transition:.3s;
-}
-
-.input-group input:focus{
-border-color:#2563eb;
-box-shadow:0 0 5px rgba(37,99,235,.3);
-}
-
-.password-box{
-position:relative;
-}
-
-.password-box input{
-padding-right:45px;
-}
-
-#togglePassword{
-position:absolute;
-right:15px;
-top:50%;
-transform:translateY(-50%);
-cursor:pointer;
-user-select:none;
-font-size:18px;
-}
-
-.options{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:25px;
-font-size:14px;
-}
-
-.options a{
-text-decoration:none;
-color:#2563eb;
-}
-
-.options a:hover{
-text-decoration:underline;
-}
-
-.login-btn{
-width:100%;
-padding:14px;
-background:#2563eb;
-color:#fff;
-border:none;
-border-radius:8px;
-font-size:17px;
-cursor:pointer;
-transition:.3s;
-}
-
-.login-btn:hover{
-background:#1d4ed8;
-}
-
-.footer{
-text-align:center;
-margin-top:20px;
-font-size:13px;
-color:#888;
-}
-
-@media(max-width:480px){
-
-.login-container{
-padding:25px;
-}
-
-.logo{
-font-size:28px;
-}
-
-}
-
-</style>
-
+  <!-- Fonts: Poppins for UI, Playfair Display for wordmark/headings -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
-
-<div class="login-container">
-
-<div class="logo">
-🏠 MVR Properties
-</div>
-
-<div class="subtitle">
-Admin Login
-</div>
-
-<form id="loginForm">
-
-<div class="input-group">
-
-<label for="email">Email</label>
-
-<input
-type="email"
-id="email"
-placeholder="Enter Email"
-required>
-
-</div>
-
-<div class="input-group">
-
-<label for="password">Password</label>
-
-<div class="password-box">
-
-<input
-type="password"
-id="password"
-placeholder="Enter Password"
-required>
-
-<span id="togglePassword">👁️</span>
-
-</div>
-
-</div>
-
-<div class="options">
-
-<label>
-
-<input
-type="checkbox"
-id="rememberMe">
-
-Remember Me
-
-</label>
-
-<a href="#" id="forgotPassword">
-
-Forgot Password?
-
-</a>
-
-</div>
-
-<button
-type="submit"
-class="login-btn">
-
-Login
-
-</button>
-
-</form>
-<!-- Login Status -->
-<div id="messageBox" class="message-box"></div>
-
-<!-- Loading Overlay -->
-<div id="loadingOverlay" class="loading-overlay">
-    <div class="loader"></div>
-    <p>Please wait...</p>
-</div>
-
-<style>
-
-/* Message Box */
-
-.message-box{
-
-display:none;
-margin-top:15px;
-padding:12px;
-border-radius:8px;
-font-size:14px;
-font-weight:bold;
-text-align:center;
-
-}
-
-.message-success{
-
-display:block;
-background:#dcfce7;
-color:#166534;
-border:1px solid #22c55e;
-
-}
-
-.message-error{
-
-display:block;
-background:#fee2e2;
-color:#991b1b;
-border:1px solid #ef4444;
-
-}
-
-/* Loading */
-
-.loading-overlay{
-
-display:none;
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,.6);
-justify-content:center;
-align-items:center;
-flex-direction:column;
-z-index:9999;
-color:#fff;
-
-}
-
-.loader{
-
-width:55px;
-height:55px;
-border:5px solid #fff;
-border-top:5px solid #2563eb;
-border-radius:50%;
-animation:spin 1s linear infinite;
-
-}
-
-.loading-overlay p{
-
-margin-top:15px;
-font-size:18px;
-
-}
-
-@keyframes spin{
-
-100%{
-
-transform:rotate(360deg);
-
-}
-
-}
-
-</style>
-
-<script>
-
-const loginForm=document.getElementById("loginForm");
-
-loginForm.addEventListener("submit",()=>{
-
-document.getElementById("loadingOverlay").style.display="flex";
-
-});
-
-</script>
-    
-<div class="footer">
-
-© 2026 MVR Properties
-
-</div>
-
-</div>
-
-<script>
-
-const password=document.getElementById("password");
-
-const toggle=document.getElementById("togglePassword");
-
-toggle.onclick=()=>{
-
-if(password.type==="password"){
-
-password.type="text";
-
-toggle.innerHTML="🙈";
-
-}else{
-
-password.type="password";
-
-toggle.innerHTML="👁️";
-
-}
-
-};
-
-</script>
-<script>
-
-// Theme Toggle Button
-const themeBtn = document.createElement("button");
-
-themeBtn.id = "themeBtn";
-themeBtn.innerHTML = "🌙";
-
-themeBtn.style.position = "fixed";
-themeBtn.style.top = "20px";
-themeBtn.style.right = "20px";
-themeBtn.style.width = "50px";
-themeBtn.style.height = "50px";
-themeBtn.style.border = "none";
-themeBtn.style.borderRadius = "50%";
-themeBtn.style.background = "#2563eb";
-themeBtn.style.color = "#fff";
-themeBtn.style.cursor = "pointer";
-themeBtn.style.fontSize = "20px";
-themeBtn.style.boxShadow = "0 5px 15px rgba(0,0,0,.2)";
-themeBtn.style.zIndex = "9999";
-
-document.body.appendChild(themeBtn);
-
-let darkMode = true;
-
-themeBtn.onclick = () => {
-
-darkMode = !darkMode;
-
-if(darkMode){
-
-document.body.style.background =
-"linear-gradient(135deg,#0f172a,#1e3a8a)";
-
-themeBtn.innerHTML = "🌙";
-
-}else{
-
-document.body.style.background = "#f3f4f6";
-
-themeBtn.innerHTML = "☀️";
-
-}
-
-};
-
-// Caps Lock Warning
-
-const passwordInput = document.getElementById("password");
-
-const capsWarning = document.createElement("small");
-
-capsWarning.innerHTML = "⚠ Caps Lock is ON";
-
-capsWarning.style.display = "none";
-capsWarning.style.color = "#dc2626";
-capsWarning.style.fontWeight = "bold";
-
-passwordInput.parentElement.appendChild(capsWarning);
-
-passwordInput.addEventListener("keyup",(e)=>{
-
-capsWarning.style.display =
-e.getModifierState("CapsLock")
-? "block"
-: "none";
-
-});
-
-// Version
-
-const version = document.createElement("div");
-
-version.innerHTML = "Version 1.0.0";
-
-version.style.textAlign = "center";
-version.style.marginTop = "15px";
-version.style.fontSize = "12px";
-version.style.color = "#888";
-
-document.querySelector(".footer").appendChild(version);
-
-</script>
-<script type="module" src="login.js"></script>
-
+  <header class="header" style="position:static;box-shadow:none;">
+    <div class="logo">
+      <img src="logo.svg" alt="MVR Properties" class="site-logo" style="height:34px;">
+    </div>
+  </header>
+
+  <main style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;">
+    <div class="container" style="width:100%;max-width:420px;">
+      <div class="login-card" style="background:var(--surface);border-radius:12px;padding:24px;">
+        <div style="text-align:center;margin-bottom:10px;">
+          <img src="logo.svg" alt="MVR Properties" class="site-logo" style="height:34px;">
+        </div>
+
+        <h2 style="font-family:'Playfair Display',serif;color:var(--primary-gold);text-align:center;margin:8px 0;">Admin Login</h2>
+        <p style="text-align:center;color:var(--muted);margin-bottom:16px;">Sign in to manage listings and publish properties</p>
+
+        <!-- NOTE: IDs below are preserved exactly so existing login.js continues to work -->
+        <form id="loginForm">
+          <div class="form-group" style="margin-bottom:12px;">
+            <label for="email" style="display:block;color:#fff;margin-bottom:6px;font-weight:600;">Email</label>
+            <input type="email" id="email" placeholder="Enter Email" required class="input" />
+          </div>
+
+          <div class="form-group" style="margin-bottom:12px;">
+            <label for="password" style="display:block;color:#fff;margin-bottom:6px;font-weight:600;">Password</label>
+            <div class="password-box" style="position:relative;">
+              <input type="password" id="password" placeholder="Enter Password" required class="input" />
+              <span id="togglePassword" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;">👁️</span>
+            </div>
+          </div>
+
+          <div class="options" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;color:var(--muted);font-size:14px;">
+            <label style="display:flex;align-items:center;gap:8px;">
+              <input type="checkbox" id="rememberMe"> Remember Me
+            </label>
+            <a href="#" id="forgotPassword" style="color:var(--primary-gold);text-decoration:none;">Forgot Password?</a>
+          </div>
+
+          <button type="submit" class="btn primary" style="width:100%;">Login</button>
+        </form>
+
+        <div id="messageBox" class="message-box" style="margin-top:12px;display:none;"></div>
+
+        <!-- preserve ID loadingOverlay used by login scripts -->
+        <div id="loadingOverlay" class="loading-overlay" style="display:none;">
+          <div class="loader" style="border:5px solid rgba(255,255,255,0.10);border-top:5px solid var(--primary-gold);width:44px;height:44px;border-radius:50%;animation:spin 1s linear infinite;"></div>
+          <p style="margin-top:10px;color:var(--muted);">Please wait...</p>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer style="text-align:center;padding:14px;color:var(--muted);">© 2026 MVR Properties</footer>
+
+  <!-- keep inline behavior scripts — these are unchanged in logic and IDs -->
+  <script>
+    const loginForm = document.getElementById("loginForm");
+    if (loginForm) loginForm.addEventListener("submit", () => {
+      const overlay = document.getElementById("loadingOverlay");
+      if (overlay) overlay.style.display = "flex";
+    });
+
+    // toggle password — same behavior
+    const password = document.getElementById("password");
+    const toggle = document.getElementById("togglePassword");
+    if (toggle && password) toggle.onclick = () => {
+      if (password.type === "password") {
+        password.type = "text";
+        toggle.innerHTML = "🙈";
+      } else {
+        password.type = "password";
+        toggle.innerHTML = "👁️";
+      }
+    };
+
+    // caps lock hint
+    if (password) {
+      const capsWarning = document.createElement("small");
+      capsWarning.innerHTML = "⚠ Caps Lock is ON";
+      capsWarning.style.display = "none";
+      capsWarning.style.color = "#ffc7c7";
+      capsWarning.style.fontWeight = "700";
+      password.parentElement.appendChild(capsWarning);
+      password.addEventListener("keyup", (e) => {
+        capsWarning.style.display = e.getModifierState("CapsLock") ? "block" : "none";
+      });
+    }
+  </script>
+
+  <!-- existing login module remains (unchanged) -->
+  <script type="module" src="login.js"></script>
 </body>
 </html>
