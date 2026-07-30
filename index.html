@@ -13,15 +13,13 @@
   <meta name="keywords"
     content="MVR Properties, Real Estate, Plots, Villas, Apartments, Farm Land">
 
-  <meta name="theme-color" content="#b8860b">
+  <meta name="theme-color" content="#0ea5a4">
 
   <link rel="stylesheet" href="style.css">
   <link rel="manifest" href="/manifest.json">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
-
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet">
 
@@ -34,190 +32,212 @@
 
 <header class="header">
 
-<div class="logo">
+  <div class="logo">
+    <i class="fa-solid fa-house"></i>
+    <span>MVR</span> Properties
+  </div>
 
-<i class="fa-solid fa-house"></i>
+  <nav class="navbar">
+    <a href="#">Home</a>
+    <a href="#featured">Featured</a>
+    <a href="#latest">Latest</a>
+    <a href="#why">Why Us</a>
+    <a href="#contact">Contact</a>
+  </nav>
 
-<span>MVR</span> Properties
+  <div class="header-buttons">
+    <button id="loginBtn" class="outline-btn">
+      <i class="fa-solid fa-user"></i>
+      Login
+    </button>
 
-</div>
-
-<nav class="navbar">
-
-<a href="#">Home</a>
-
-<a href="#featured">Featured</a>
-
-<a href="#latest">Latest</a>
-
-<a href="#contact">Contact</a>
-
-</nav>
-
-<div class="header-buttons">
-
-<button id="loginBtn" class="outline-btn">
-
-<i class="fa-solid fa-user"></i>
-
-Login
-
-</button>
-
-<button id="addPropertyBtn" class="gold-btn">
-
-<i class="fa-solid fa-plus"></i>
-
-Add Property
-
-</button>
-
-</div>
+    <button id="addPropertyBtn" class="gold-btn">
+      <i class="fa-solid fa-plus"></i>
+      Add Property
+    </button>
+  </div>
 
 </header>
 
+<!-- HERO / PREMIUM BANNER -->
 <section class="hero">
+  <div class="hero-overlay"></div>
+  <div class="hero-content container">
+    <div class="hero-text">
+      <h1>Find Your Modern Dream Home</h1>
+      <p class="lead">Premium listings in top neighbourhoods — buy, rent or list with confidence.</p>
 
-<div class="hero-overlay"></div>
+      <div class="hero-cta-row">
+        <a href="#featured" class="btn primary large">Browse Properties</a>
+        <a href="tel:8639496081" class="btn ghost large"><i class="fa-solid fa-phone"></i> Call Now</a>
+        <button id="postPropertyTop" class="btn accent-outline large">Post Your Property Free</button>
+      </div>
+    </div>
 
-<div class="hero-content">
+    <!-- SEARCH BAR (keeps existing IDs for compatibility) -->
+    <form id="advancedSearch" class="search-bar" onsubmit="event.preventDefault(); searchProperties();">
+      <input type="text" id="searchInput" placeholder="Search by City, Layout, Area or Title..." aria-label="Search keyword">
 
-<h1>
+      <select id="filterLocation" aria-label="Location">
+        <option value="">All Locations</option>
+        <option value="Andhra">Andhra Pradesh</option>
+        <option value="Hyderabad">Hyderabad</option>
+        <option value="Vijayawada">Vijayawada</option>
+      </select>
 
-Find Your Dream Property
+      <select id="filterType" aria-label="Property Type">
+        <option value="">Any Type</option>
+        <option value="plot">Open Plot</option>
+        <option value="house">Independent House</option>
+        <option value="apartment">Apartment</option>
+        <option value="farm">Farm Land</option>
+        <option value="commercial">Commercial</option>
+      </select>
 
-</h1>
+      <select id="filterBudget" aria-label="Budget">
+        <option value="">Any Budget</option>
+        <option value="0-100000">Up to ₹100k</option>
+        <option value="100000-300000">₹100k–₹300k</option>
+        <option value="300000-600000">₹300k–₹600k</option>
+        <option value="600000+">₹600k+</option>
+      </select>
 
-<p>
-
-Verified Plots • Villas • Apartments • Farm Lands
-
-</p>
-
-<div class="search-box">
-
-<input
-type="text"
-id="searchInput"
-placeholder="Search by City, Layout, Area...">
-
-<button id="searchBtn" class="gold-btn">
-
-<i class="fa-solid fa-magnifying-glass"></i>
-
-Search
-
-</button>
-
-</div>
-
-<div class="hero-actions">
-
-<a href="#featured" class="gold-btn">
-
-Browse Properties
-
-</a>
-
-<a href="tel:8639496081" class="outline-btn">
-
-<i class="fa-solid fa-phone"></i>
-
-Call Now
-
-</a>
-
-<a href="#" id="superBeemAI" class="ai-btn">
-
-🤖 SUPER BEEM AI
-
-</a>
-
-</div>
-
-</div>
-
+      <button id="searchBtn" class="btn primary"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+    </form>
+  </div>
 </section>
 
+<!-- CATEGORIES -->
 <section class="categories">
+  <h2 class="section-title">Browse by Category</h2>
+  <div class="category-grid container">
+    <div class="category-card">
+      <i class="fa-solid fa-map-location-dot"></i>
+      <h3>Open Plots</h3>
+      <p>Verified Layouts</p>
+    </div>
 
-<h2 class="section-title">Browse by Category</h2>
+    <div class="category-card">
+      <i class="fa-solid fa-house"></i>
+      <h3>Independent Houses</h3>
+      <p>Ready To Move</p>
+    </div>
 
-<div class="category-grid">
+    <div class="category-card">
+      <i class="fa-solid fa-building"></i>
+      <h3>Apartments</h3>
+      <p>Luxury & Budget</p>
+    </div>
 
-<div class="category-card">
-<i class="fa-solid fa-map-location-dot"></i>
-<h3>Open Plots</h3>
-<p>Verified Layouts</p>
-</div>
+    <div class="category-card">
+      <i class="fa-solid fa-tree"></i>
+      <h3>Farm Lands</h3>
+      <p>Agricultural Properties</p>
+    </div>
 
-<div class="category-card">
-<i class="fa-solid fa-house"></i>
-<h3>Independent Houses</h3>
-<p>Ready To Move</p>
-</div>
-
-<div class="category-card">
-<i class="fa-solid fa-building"></i>
-<h3>Apartments</h3>
-<p>Luxury & Budget</p>
-</div>
-
-<div class="category-card">
-<i class="fa-solid fa-tree"></i>
-<h3>Farm Lands</h3>
-<p>Agricultural Properties</p>
-</div>
-
-<div class="category-card">
-<i class="fa-solid fa-shop"></i>
-<h3>Commercial</h3>
-<p>Shops & Offices</p>
-</div>
-
-</div>
-
+    <div class="category-card">
+      <i class="fa-solid fa-shop"></i>
+      <h3>Commercial</h3>
+      <p>Shops & Offices</p>
+    </div>
+  </div>
 </section>
 
-<section class="stats">
+<!-- STATS -->
+<section class="stats container">
+  <div class="stat-card">
+    <h2>500+</h2>
+    <p>Properties</p>
+  </div>
 
-<div class="stat-card">
-<h2>500+</h2>
-<p>Properties</p>
-</div>
+  <div class="stat-card">
+    <h2>100+</h2>
+    <p>Happy Clients</p>
+  </div>
 
-<div class="stat-card">
-<h2>100+</h2>
-<p>Happy Clients</p>
-</div>
+  <div class="stat-card">
+    <h2>24/7</h2>
+    <p>Support</p>
+  </div>
 
-<div class="stat-card">
-<h2>24/7</h2>
-<p>Support</p>
-</div>
-
-<div class="stat-card">
-<h2>100%</h2>
-<p>Verified Listings</p>
-</div>
-
+  <div class="stat-card">
+    <h2>100%</h2>
+    <p>Verified Listings</p>
+  </div>
 </section>
 
-<section id="featured" class="section">
-
-<h2 class="section-title">
-⭐ Featured Properties
-</h2>
-
-<div id="propertyList" class="property-grid"></div>
-
+<!-- FEATURED -->
+<section id="featured" class="section container">
+  <h2 class="section-title">⭐ Featured Properties</h2>
+  <div id="propertyList" class="property-grid"></div>
 </section>
 
-<section id="latest" class="section">
+<!-- WHY CHOOSE US -->
+<section id="why" class="section why container">
+  <h2 class="section-title">Why Choose MVR Properties</h2>
+  <div class="why-grid">
+    <div class="why-item">
+      <div class="icon">🏡</div>
+      <h4>Verified Listings</h4>
+      <p>Every property is screened for quality and accuracy.</p>
+    </div>
+    <div class="why-item">
+      <div class="icon">⭐</div>
+      <h4>Trusted Agents</h4>
+      <p>Experienced agents to guide you through every step.</p>
+    </div>
+    <div class="why-item">
+      <div class="icon">🔒</div>
+      <h4>Secure Transactions</h4>
+      <p>Trusted payment and documentation processes.</p>
+    </div>
+    <div class="why-item">
+      <div class="icon">⚡</div>
+      <h4>Fast Support</h4>
+      <p>Dedicated customer care ready to assist.</p>
+    </div>
+  </div>
+</section>
+
+<!-- LATEST -->
+<section id="latest" class="section container">
   <h2 class="section-title">Latest Properties</h2>
   <div id="latestProperties" class="property-grid"></div>
 </section>
 
+<!-- TESTIMONIALS -->
+<section class="section testimonials container">
+  <h2 class="section-title">What Our Customers Say</h2>
+  <div class="testimonials-grid">
+    <div class="testimonial-card">
+      <p class="quote">"MVR helped us find our perfect home quickly — excellent service!"</p>
+      <p class="who">— Asha K.</p>
+    </div>
+    <div class="testimonial-card">
+      <p class="quote">"The listing process was simple and free. Great exposure for our property."</p>
+      <p class="who">— Raj P.</p>
+    </div>
+    <div class="testimonial-card">
+      <p class="quote">"Professional agents and fast support. Highly recommended."</p>
+      <p class="who">— S. Reddy</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<section class="section cta container">
+  <div class="cta-inner">
+    <div>
+      <h3>Ready to list your property?</h3>
+      <p>Post your property for free and reach thousands of potential buyers.</p>
+    </div>
+    <div>
+      <button id="postPropertyMid" class="btn primary large">Post Your Property Free</button>
+    </div>
+  </div>
+</section>
+
+<!-- EXISTING MODAL & FLOATING ACTIONS (preserve IDs and structure) -->
 <div id="propertyModal" class="modal">
   <div class="modal-content">
     <span class="close-modal">&times;</span>
@@ -245,7 +265,7 @@ Call Now
 <button id="floatingAI" class="floating-ai">🤖</button>
 
 <footer id="contact">
-  <div class="footer-container">
+  <div class="footer-container container">
     <div>
       <h2>MVR Properties</h2>
       <p>Buy • Sell • Rent</p>
@@ -277,6 +297,12 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/service-worker.js').catch(err => console.warn('SW registration failed:', err));
   });
 }
+
+// wire CTA buttons to existing add/publish flow
+const postPropertyTop = document.getElementById('postPropertyTop');
+const postPropertyMid = document.getElementById('postPropertyMid');
+if (postPropertyTop) postPropertyTop.addEventListener('click', () => window.location.href = 'admin.html');
+if (postPropertyMid) postPropertyMid.addEventListener('click', () => window.location.href = 'admin.html');
 </script>
 
 </body>
