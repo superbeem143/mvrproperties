@@ -41,7 +41,7 @@ body{
 /* HEADER */
 .header{
   position:fixed;
-  top:0;left:0;width:100%;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 4%;background:#000;padding-left:14px;padding-right:14px;z-index:1200;border-bottom:1px solid rgba(255,255,255,0.02);
+  top:0;left:0;width:100%;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 4%;background:#000;padding-left:14px;padding-right:14px;z-index:1200;border-bottom:1px[...]
 }
 .logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px}
 .site-logo{height:36px;display:inline-block}
@@ -60,18 +60,38 @@ body{
 .outline-btn{background:transparent;color:var(--primary-gold);border:1px solid rgba(212,175,55,0.12);padding:8px 12px}
 .outline-btn:hover{background:rgba(212,175,55,0.03)}
 
-/* HERO: keep clean, mobile-first */
-.hero{min-height:54vh;display:flex;align-items:center;position:relative;padding:90px 0 28px;margin-bottom:12px;background-image:url('images/modern-houses-hero.jpg');background-size:cover;background-position:center}
-.hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg, rgba(13,13,13,0.36), rgba(13,13,13,0.6));z-index:1}
-.hero-content{position:relative;z-index:2;display:block;padding:36px 4%;max-width:980px}
-.hero-text h1{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,4vw,2.6rem);margin:0 0 10px;color:#fff;font-weight:700}
-.lead{color:var(--muted);margin-bottom:14px}
+/* HERO: polished typography, spacing, and subtle animation */
+.hero{
+  min-height:60vh;display:flex;align-items:center;position:relative;padding:110px 0 28px;margin-bottom:12px;background-image:url('images/modern-houses-hero.jpg');background-size:cover;background-position:center;overflow:hidden;
+}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg, rgba(13,13,13,0.36), rgba(13,13,13,0.65));z-index:1}
 
-/* search bar: simplified */
-.search-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--surface);padding:10px;border-radius:10px;width:100%;}
+/* Picture background sits behind the overlay and content; safe lazy-loaded helper will swap data-src */
+.hero-picture{position:absolute;inset:0;z-index:0;height:100%;width:100%;display:block}
+.hero-picture img.hero-bg{width:100%;height:100%;object-fit:cover;display:block}
+
+.hero-content{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:28px 4%;gap:28px;max-width:1100px}
+.hero-text{max-width:640px}
+.hero-text h1{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,4vw,3.2rem);margin:0 0 10px;color:#fff;font-weight:700;line-height:1.05}
+.lead{color:var(--muted);margin-bottom:16px;font-size:1rem}
+
+.hero-cta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.hero-cta-row .btn{padding:10px 14px;border-radius:10px}
+.btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:#fff}
+.btn.accent-outline{background:transparent;border:1px solid rgba(212,175,55,0.12);color:var(--primary-gold)}
+
+/* search bar sits under hero text on wide screens and below on narrow screens */
+.search-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--surface);padding:10px;border-radius:10px;width:100%;max-width:520px;margin-left:auto}
 .search-bar input[type="text"], .search-bar select{padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:#fff;min-width:120px;font-size:14px;outline:none}
 .search-bar input::placeholder{color:rgba(255,255,255,0.6)}
 .search-bar .btn.primary{flex:0 0 auto}
+
+/* animation - subtle fade/slide for hero copy */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.hero-text{animation:fadeUp 520ms var(--transition-smooth) both}
 
 /* categories & cards */
 .categories{padding:36px 0;background:transparent}
@@ -110,8 +130,10 @@ footer{background:#000;color:var(--muted);padding:28px 4%;border-top:1px solid r
 /* small screens - mobile-first adjustments */
 @media (max-width:900px){
   .header{height:58px;padding:0 12px}
-  .hero{padding-top:80px}
-  .hero-content{padding:24px}
+  .hero{padding-top:80px;min-height:48vh}
+  .hero-content{padding:20px;flex-direction:column;align-items:flex-start}
+  .hero-picture{display:block}
+  .search-bar{max-width:100%;margin-left:0}
   .property-image{height:160px}
   .container{padding:0 12px}
   .navbar{display:none}
@@ -119,8 +141,11 @@ footer{background:#000;color:var(--muted);padding:28px 4%;border-top:1px solid r
 
 @media (max-width:560px){
   .hero-text h1{font-size:1.4rem}
+  .hero-text{max-width:100%}
   .property-grid{grid-template-columns:1fr}
   .category-grid{grid-template-columns:repeat(auto-fit,minmax(140px,1fr));}
+  .hero-cta-row{justify-content:flex-start}
+  .search-bar{order:3;width:100%}
 }
 
 /* accessibility */

@@ -78,7 +78,7 @@ function searchProperties() {
     list = list.filter(p => {
       return (p.title || '').toLowerCase().includes(keyword) ||
              (p.location || '').toLowerCase().includes(keyword) ||
-             (p.type || '').toLowerCase().includes(keyword) ||
+             (p.type || '').toLowerCase().includes(type) ||
              (p.description || '').toLowerCase().includes(keyword);
     });
   }
@@ -262,6 +262,46 @@ const aiButton = document.getElementById('floatingAI');
 if (aiButton) aiButton.addEventListener('click', () => alert('🤖 SUPER BEEM AI is coming soon!'));
 
 // =============================
+// Lazy-load helper for hero background (lightweight, non-invasive)
+// - Uses IntersectionObserver when available, falls back to immediate load
+// - Only touches elements with data-src / data-srcset to avoid changing existing IDs or classes
+// =============================
+function initHeroLazyLoad() {
+  const heroImg = document.querySelector('img.hero-bg[data-src]');
+  const heroSources = Array.from(document.querySelectorAll('source[data-srcset]'));
+
+  function loadHero() {
+    if (heroImg && heroImg.dataset.src) {
+      heroImg.src = heroImg.dataset.src;
+      heroImg.removeAttribute('data-src');
+    }
+    heroSources.forEach(s => {
+      if (s.dataset.srcset) {
+        s.srcset = s.dataset.srcset;
+        s.removeAttribute('data-srcset');
+      }
+    });
+  }
+
+  if (!heroImg && heroSources.length === 0) return;
+
+  if ('IntersectionObserver' in window) {
+    const obs = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          loadHero();
+          observer.disconnect();
+        }
+      });
+    });
+    obs.observe(document.querySelector('.hero'));
+  } else {
+    // fallback
+    window.addEventListener('load', loadHero);
+  }
+}
+
+// =============================
 // Load Properties from Firestore (modular)
 // =============================
 async function loadProperties() {
@@ -302,5 +342,7 @@ window.addEventListener('scroll', () => {
 // =============================
 window.addEventListener('DOMContentLoaded', () => {
   console.log('✅ MVR Properties Loaded');
+  // init lightweight hero lazy loading (non-invasive)
+  initHeroLazyLoad();
   loadProperties();
 });
