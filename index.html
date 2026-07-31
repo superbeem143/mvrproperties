@@ -55,8 +55,18 @@
 <!-- HERO / PREMIUM BANNER -->
 <section class="hero">
   <div class="hero-overlay"></div>
+  <!-- Responsive, lazy hero image (keeps public/cloudinary config unchanged) -->
+  <picture class="hero-picture" aria-hidden="true">
+    <!-- large screens -->
+    <source media="(min-width:900px)" data-srcset="images/modern-houses-hero-large.jpg">
+    <!-- medium -->
+    <source media="(min-width:560px)" data-srcset="images/modern-houses-hero-medium.jpg">
+    <!-- fallback small -->
+    <img class="hero-bg" data-src="images/modern-houses-hero.jpg" alt="Modern houses" loading="lazy">
+  </picture>
+
   <div class="hero-content container">
-    <div class="hero-text">
+    <div class="hero-text" id="heroText">
       <h1>Find Your Modern Dream Home</h1>
       <p class="lead">Premium listings in top neighbourhoods — buy, rent or list with confidence.</p>
 
